@@ -13,13 +13,7 @@ That's it!
 ## Quickstart
 To begin using Unslider, just include the files, and create the HTML for your banner like so:
 ```
-<div id="slider">
-	<ul>
-		<li></li>
-		<li></li>
-		<li></li> <!-- you get the idea. -->
-	</ul>
-</div>
+<div id="slider"><ul><li></li><li></li><li></li> <!-- you get the idea. --></ul></div>
 ```
 
 Pretty straightforward, and nice and semantic. Lovely. Now, we need a touch of CSS as well:
