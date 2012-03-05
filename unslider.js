@@ -132,6 +132,10 @@
 							$('.unslider-arrows .' + keys[key]).click();
 						}
 					});
+				} else { //  No arrows, just autoplay
+					setTimeout(function() {
+						$('.unslider-arrows .next').click();
+					}, o.delay);
 				}
 				
 			}
