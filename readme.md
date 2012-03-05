@@ -34,16 +34,17 @@ $('#slider').unslider({
 ```
 
 ## Options
-It's also got a few options:
+It's also got a few options. Here are the defaults:
 
 ```javascript
 {
-	activeClass: 'active',
-	arrows: true, //  If false, just autoplay
+	activeClass: 'active', //  The class of the active slide
+	arrows: true, //  Choose whether to show the arrows in the markup or not
 	
 	//  Speeds + timing
 	speed: 250,
 	delay: 2000,
+	autoplay: true //  Should the slider autoplay?
 	
 	//  Callbacks
 	afterSlide: function() {} //  Called after a slide has occured.

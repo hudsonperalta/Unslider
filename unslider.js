@@ -35,11 +35,12 @@
 		//  Set the options
 		var o = $.extend({
 					activeClass: 'active',
-					arrows: true, //  If false, just autoplay
+					arrows: true,
+					autoplay: true,
 					
 					//  Speeds + timing
-					speed: 250,
-					delay: 2000,
+					speed: 500,
+					delay: 3000,
 					
 					//  Callbacks
 					afterSlide: function() {}
@@ -131,12 +132,22 @@
 							$('.unslider-arrows .' + keys[key]).click();
 						}
 					});
-				} else { //  No arrows, just autoplay
-					setTimeout(function() {
-						$('.unslider-arrows .next').click();
-					}, o.delay);
 				}
 				
+				//  Autoplay
+				if(o.autoplay) {
+					var cont = function() {
+							return $('.unslider-arrows .next').click();
+						},
+						auto = setInterval(cont, o.delay);
+				
+					//  Turn off (and back on) on hover.
+					me.hover(function() {
+						clearInterval(auto);
+					}, function() {
+						auto = setInterval(cont, o.delay);
+					});
+				}
 			}
 		});
 	};
