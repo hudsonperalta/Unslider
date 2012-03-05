@@ -12,7 +12,7 @@ That's it!
 
 ## Quickstart
 To begin using Unslider, just include the files, and create the HTML for your banner like so:
-```html
+```
 <div id="slider">
 	<ul>
 		<li></li>
@@ -56,5 +56,5 @@ It's also got a few options:
 	
 	//  Callbacks
 	afterSlide: function() {} //  Called after a slide has occured.
-};
+}
 ```
