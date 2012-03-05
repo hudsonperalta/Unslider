@@ -117,10 +117,9 @@
 					$('<p class="unslider-arrows"><span class="arrow previous" /><span class="arrow next" /></p>').appendTo(me.parent()).find('.arrow').each(function() {
 						
 						var me = $(this), dir = me.attr('class').split(' ')[1],
-							msg = 'Click to show the ? slide'.replace('?', dir),
 							arrows = {previous: '&laquo;', next: '&raquo;'};
 						
-						me.attr('title', msg).html(arrows[dir]);
+						me.attr('title', 'Click to show the ' + dir + ' slide').html(arrows[dir]);
 						
 					}).click(go);
 					
