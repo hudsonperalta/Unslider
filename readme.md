@@ -11,10 +11,7 @@ If you want to have a quick, lightweight slider, with just the arrows and no fan
 That's it!
 
 ## Quickstart
-To begin using Unslider, just include the files, and create the HTML for your banner like so:
-```
-<div id="slider"><ul><li></li><li></li><li></li> <!-- you get the idea. --></ul></div>
-```
+To begin using Unslider, just include the files, and create a `div` with an unordered list (`ul`) inside.
 
 Pretty straightforward, and nice and semantic. Lovely. Now, we need a touch of CSS as well:
 ```css
