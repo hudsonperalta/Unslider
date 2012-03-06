@@ -32,7 +32,7 @@
 			anim = this.is(':animated');
 	
 		if(!anim) {
-			me.stop().animate({marginLeft: parseFloat(pos)}, speed, easing, callback);
+			me.stop().animate({left: parseFloat(pos)}, speed, easing, callback);
 		}
 		
 		return anim;
@@ -74,7 +74,7 @@
 						dir = me.attr('class').split(' ')[1],
 						
 						current = items.filter('.' + o.activeClass),
-						margin = parseFloat(list.css('margin-left')),
+						margin = parseFloat(list.css('left')),
 						
 						actions = {
 							previous: function() {
@@ -84,7 +84,7 @@
 									
 								prev.addClass(o.activeClass).siblings().removeClass(o.activeClass);
 								
-								if(parseFloat(list.css('margin-left')) >= 0) {
+								if(parseFloat(list.css('left')) >= 0) {
 									setTimeout(function() {
 										
 									}, o.speed);
@@ -92,11 +92,11 @@
 								
 								return list.moveUnslider(margin + width, o.speed, o.easing, function() {
 								
-									if(parseFloat(list.css('margin-left')) >= 0) {
-										list.css('margin-left', -(width * (itemCount - 2)));
+									if(parseFloat(list.css('left')) >= 0) {
+										list.css('left', -(width * (itemCount - 2)));
 									
 										//  Reset the margin so we can recalculate properly
-										margin = parseFloat(list.css('margin-left'));
+										margin = parseFloat(list.css('left'));
 									}
 								
 									if($.isFunction(o.afterSlide)) {
@@ -114,7 +114,7 @@
 								return list.moveUnslider(margin - width, o.speed, o.easing, function() {
 									
 									if(last) {
-										list.css('margin-left', -width);
+										list.css('left', -width);
 									}
 									
 									if($.isFunction(o.afterSlide)) {
@@ -138,7 +138,7 @@
 				items.filter(':last').clone().addClass('cloned').prependTo(list);	
 				
 				//  Set the width to stop wrapping, and since we have a clone, position it offscreen
-				list.css({width: width * itemCount, marginLeft: -width});
+				list.css({width: width * itemCount, left: -width});
 				
 				//  Get the arrows, if they want 'em.
 				if(o.arrows) {

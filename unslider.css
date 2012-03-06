@@ -1,2 +1,3 @@
 .unslider { overflow: hidden; }
+	.unslider ul { position: relative; }
 	.unslider li { float: left; }
