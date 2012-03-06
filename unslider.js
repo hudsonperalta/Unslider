@@ -1,5 +1,5 @@
 /**
- *  Unslider 0.1
+ *  Unslider 0.2
  *  by @visualidiot
  *
  *  Licensed under the WTFPL, as always.
