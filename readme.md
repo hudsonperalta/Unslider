@@ -44,7 +44,8 @@ It's also got a few options. Here are the defaults:
 	//  Speeds + timing
 	speed: 250,
 	delay: 2000,
-	autoplay: true //  Should the slider autoplay?
+	autoplay: true, //  Should the slider autoplay?
+	easing: 'swing', //  A jQuery easing string (see the Easing plugin for more: http://gsgd.co.uk/sandbox/jquery/easing/)
 	
 	//  Callbacks
 	afterSlide: function() {} //  Called after a slide has occured.

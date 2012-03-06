@@ -26,13 +26,13 @@
 	/**
 	 *	 Move the Unslider
 	 */
-	$.fn.moveUnslider = function(pos, speed, callback) {
+	$.fn.moveUnslider = function(pos, speed, easing, callback) {
 	
 		var me = this,
 			anim = this.is(':animated');
 	
 		if(!anim) {
-			me.stop().animate({marginLeft: parseFloat(pos)}, speed, callback);
+			me.stop().animate({marginLeft: parseFloat(pos)}, speed, easing, callback);
 		}
 		
 		return anim;
@@ -49,6 +49,8 @@
 					//  Speeds + timing
 					speed: 500,
 					delay: 3000,
+					
+					easing: 'swing',
 					
 					//  Callbacks
 					afterSlide: function() {}
@@ -88,7 +90,7 @@
 									}, o.speed);
 								}
 								
-								return list.moveUnslider(margin + width, o.speed, function() {
+								return list.moveUnslider(margin + width, o.speed, o.easing, function() {
 								
 									if(parseFloat(list.css('margin-left')) >= 0) {
 										list.css('margin-left', -(width * (itemCount - 2)));
@@ -109,7 +111,7 @@
 							
 								next.addClass(o.activeClass).siblings().removeClass(o.activeClass);
 							
-								return list.moveUnslider(margin - width, o.speed, function() {
+								return list.moveUnslider(margin - width, o.speed, o.easing, function() {
 									
 									if(last) {
 										list.css('margin-left', -width);
