@@ -109,13 +109,16 @@
 							
 								next.addClass(o.activeClass).siblings().removeClass(o.activeClass);
 							
-								if(last) {
-									setTimeout(function() {
+								return list.moveUnslider(margin - width, o.speed, function() {
+									
+									if(last) {
 										list.css('margin-left', -width);
-									}, o.speed);
-								}
-							
-								return list.moveUnslider(margin - width, o.speed, o.afterSlide);
+									}
+									
+									if($.isFunction(o.afterSlide)) {
+										o.afterSlide.call(this);
+									}
+								});
 							}
 						};
 						
