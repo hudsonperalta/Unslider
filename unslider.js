@@ -82,11 +82,25 @@
 									
 								prev.addClass(o.activeClass).siblings().removeClass(o.activeClass);
 								
-								if(!first) {
-									list.moveUnslider(margin + width, o.speed, o.afterSlide);
-								} else {
-									list.moveUnslider(-(width * (itemCount - 3)), o.speed, o.afterSlide);
+								if(parseFloat(list.css('margin-left')) >= 0) {
+									setTimeout(function() {
+										
+									}, o.speed);
 								}
+								
+								return list.moveUnslider(margin + width, o.speed, function() {
+								
+									if(parseFloat(list.css('margin-left')) >= 0) {
+										list.css('margin-left', -(width * (itemCount - 2)));
+									
+										//  Reset the margin so we can recalculate properly
+										margin = parseFloat(list.css('margin-left'));
+									}
+								
+									if($.isFunction(o.afterSlide)) {
+										o.afterSlide.call(this);
+									}
+								});
 							},
 							next: function() {
 							
@@ -97,7 +111,7 @@
 							
 								if(last) {
 									setTimeout(function() {
-										list.moveUnslider(-width, 0);
+										list.css('margin-left', -width);
 									}, o.speed);
 								}
 							
