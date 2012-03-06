@@ -27,7 +27,15 @@
 	 *	 Move the Unslider
 	 */
 	$.fn.moveUnslider = function(pos, speed, callback) {
-		return this.stop().animate({marginLeft: parseFloat(pos)}, speed, callback);
+	
+		var me = this,
+			anim = this.is(':animated');
+	
+		if(!anim) {
+			me.stop().animate({marginLeft: parseFloat(pos)}, speed, callback);
+		}
+		
+		return anim;
 	};
 
 	$.fn.unslider = function(options) {
