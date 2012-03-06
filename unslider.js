@@ -36,7 +36,7 @@
 		var o = $.extend({
 					activeClass: 'active',
 					arrows: true,
-					autoplay: true,
+					autoplay: false,
 					
 					//  Speeds + timing
 					speed: 500,
@@ -104,7 +104,7 @@
 				};
 				
 			//  Check we have two or more items (the itemCount adds two)
-			if(itemCount > 4) {
+			if(itemCount >= 4) {
 	
 				//  Append the first and last items
 				first.addClass(o.activeClass).clone().attr('class', 'cloned').appendTo(list);	
