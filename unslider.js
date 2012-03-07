@@ -66,69 +66,7 @@
 				itemCount = items.length + 2, //  Don't forget our clones!
 				
 				width = me.width(),
-				height = first.height(),
-				
-				go = function() {
-					
-					var me = $(this),
-						dir = me.attr('class').split(' ')[1],
-						
-						current = items.filter('.' + o.activeClass),
-						margin = parseFloat(list.css('left')),
-						
-						actions = {
-							previous: function() {
-							
-								var first = current.prev().hasClass('cloned'),
-									prev = first ? items.eq(-1) : current.prev();
-									
-								prev.addClass(o.activeClass).siblings().removeClass(o.activeClass);
-								
-								if(parseFloat(list.css('left')) >= 0) {
-									setTimeout(function() {
-										
-									}, o.speed);
-								}
-								
-								return list.moveUnslider(margin + width, o.speed, o.easing, function() {
-								
-									if(parseFloat(list.css('left')) >= 0) {
-										list.css('left', -(width * (itemCount - 2)));
-									
-										//  Reset the margin so we can recalculate properly
-										margin = parseFloat(list.css('left'));
-									}
-								
-									if($.isFunction(o.afterSlide)) {
-										o.afterSlide.call(this);
-									}
-								});
-							},
-							next: function() {
-							
-								var last = current.next().hasClass('cloned'),
-									next = last ? items.eq(0) : current.next();
-							
-								next.addClass(o.activeClass).siblings().removeClass(o.activeClass);
-							
-								return list.moveUnslider(margin - width, o.speed, o.easing, function() {
-									
-									if(last) {
-										list.css('left', -width);
-									}
-									
-									if($.isFunction(o.afterSlide)) {
-										o.afterSlide.call(this);
-									}
-								});
-							}
-						};
-						
-					//  Run the action, based on the class of the link. Genius.
-					if(actions[dir]) {
-						actions[dir]();
-					}
-				};
+				height = first.height();
 				
 			//  Check we have two or more items (the itemCount adds two)
 			if(itemCount >= 4) {
@@ -149,7 +87,59 @@
 						
 						me.attr('title', 'Click to show the ' + dir + ' slide').html(arrows[dir]);
 						
-					}).click(go);
+					}).click(function() {
+						
+						var me = $(this),
+							dir = me.attr('class').split(' ')[1],
+							
+							current = items.filter('.' + o.activeClass),
+							margin = parseFloat(list.css('left')),
+							
+							actions = {
+								previous: function() {
+								
+									var first = current.prev().hasClass('cloned'),
+										prev = first ? items.eq(-1) : current.prev();
+										
+									prev.addClass(o.activeClass).siblings().removeClass(o.activeClass);
+									
+									return list.moveUnslider(margin + width, o.speed, o.easing, function() {
+									
+										if(parseFloat(list.css('left')) >= 0) {
+											list.css('left', -(width * (itemCount - 2)));
+										
+											//  Reset the margin so we can recalculate properly
+											margin = parseFloat(list.css('left'));
+										}
+									
+										if($.isFunction(o.afterSlide)) {
+											o.afterSlide.call(this);
+										}
+									});
+								},
+								next: function() {
+								
+									var last = current.next().hasClass('cloned'),
+										next = last ? items.eq(0) : current.next();
+								
+									next.addClass(o.activeClass).siblings().removeClass(o.activeClass);
+								
+									return list.moveUnslider(margin - width, o.speed, o.easing, function() {
+										
+										last && list.css('left', -width);
+
+										if($.isFunction(o.afterSlide)) {
+											o.afterSlide.call(this);
+										}
+									});
+								}
+							};
+							
+						//  Run the action, based on the class of the link. Genius.
+						if(actions[dir]) {
+							actions[dir]();
+						}
+					});
 					
 					$(d).keyup(function(e) {
 						var key = e.which,
