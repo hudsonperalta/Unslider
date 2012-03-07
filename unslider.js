@@ -1,5 +1,5 @@
 /**
- *  Unslider 0.2
+ *  Unslider 0.3
  *  by @visualidiot
  *
  *  Licensed under the WTFPL, as always.
@@ -83,7 +83,7 @@
 					$('<p class="unslider-arrows"><span class="arrow previous" /><span class="arrow next" /></p>').appendTo(me.parent()).find('.arrow').each(function() {
 						
 						var me = $(this), dir = me.attr('class').split(' ')[1],
-							arrows = {previous: '&laquo;', next: '&raquo;'};
+							arrows = {previous: '&larr;', next: '&rarr;'};
 						
 						me.attr('title', 'Click to show the ' + dir + ' slide').html(arrows[dir]);
 						
