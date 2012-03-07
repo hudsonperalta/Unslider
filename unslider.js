@@ -27,15 +27,7 @@
 	 *	 Move the Unslider
 	 */
 	$.fn.moveUnslider = function(pos, speed, easing, callback) {
-	
-		var me = this,
-			anim = this.is(':animated');
-	
-		if(!anim) {
-			me.stop().animate({left: parseFloat(pos)}, speed, easing, callback);
-		}
-		
-		return anim;
+		return this.is(':animated') || this.stop().animate({left: parseFloat(pos)}, speed, easing, callback);
 	};
 
 	$.fn.unslider = function(options) {
@@ -54,7 +46,9 @@
 					
 					//  Callbacks
 					afterSlide: function() {}
-				}, options);
+				}, options),
+			c = 'cloned',
+			a = 'unslider-arrows';
 	
 		//  And loop every instance of the Unslider
 		return this.each(function() {
@@ -66,21 +60,23 @@
 				itemCount = items.length + 2, //  Don't forget our clones!
 				
 				width = me.width(),
-				height = first.height();
+				height = first.height(),
+				
+				setActive = function(el) { el.addClass(o.activeClass).siblings().removeClass(o.activeClass); };
 				
 			//  Check we have two or more items (the itemCount adds two)
 			if(itemCount >= 4) {
 	
 				//  Append the first and last items
-				first.addClass(o.activeClass).clone().attr('class', 'cloned').appendTo(list);	
-				items.last().clone().addClass('cloned').prependTo(list);	
+				first.addClass(o.activeClass).clone().attr('class', c).appendTo(list);	
+				items.last().clone().addClass(c).prependTo(list);	
 				
 				//  Set the width to stop wrapping, and since we have a clone, position it offscreen
 				list.css({width: width * itemCount, left: -width});
 				
 				//  Get the arrows, if they want 'em.
 				if(o.arrows) {
-					$('<p class="unslider-arrows"><span class="arrow previous" /><span class="arrow next" /></p>').appendTo(me.parent()).find('.arrow').each(function() {
+					$('<p class="' + a + '"><span class="arrow previous" /><span class="arrow next" /></p>').appendTo(me.parent()).find('.arrow').each(function() {
 						
 						var me = $(this), dir = me.attr('class').split(' ')[1],
 							arrows = {previous: '&larr;', next: '&rarr;'};
@@ -98,10 +94,10 @@
 							actions = {
 								previous: function() {
 								
-									var first = current.prev().hasClass('cloned'),
+									var first = current.prev().hasClass(c),
 										prev = first ? items.eq(-1) : current.prev();
 										
-									prev.addClass(o.activeClass).siblings().removeClass(o.activeClass);
+									setActive(prev);
 									
 									return list.moveUnslider(margin + width, o.speed, o.easing, function() {
 									
@@ -119,10 +115,10 @@
 								},
 								next: function() {
 								
-									var last = current.next().hasClass('cloned'),
+									var last = current.next().hasClass(c),
 										next = last ? items.eq(0) : current.next();
 								
-									next.addClass(o.activeClass).siblings().removeClass(o.activeClass);
+									setActive(next);
 								
 									return list.moveUnslider(margin - width, o.speed, o.easing, function() {
 										
@@ -142,20 +138,17 @@
 					});
 					
 					$(d).keyup(function(e) {
-						var key = e.which,
-							keys = {37: 'previous', 39: 'next'};
+						var keys = {37: 'previous', 39: 'next'};
 						
-						if(keys[key]) {
-							$('.unslider-arrows .' + keys[key]).click();
+						if(keys[e.which]) {
+							$('.' + a + ' .' + keys[e.which]).click();
 						}
 					});
 				}
 				
 				//  Autoplay
 				if(o.autoplay) {
-					var cont = function() {
-							return $('.unslider-arrows .next').click();
-						},
+					var cont = function() { $('.' + a + ' .next').click(); },
 						auto = setInterval(cont, o.delay);
 				
 					//  Turn off (and back on) on hover.
