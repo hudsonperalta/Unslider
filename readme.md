@@ -1,7 +1,7 @@
 # Unslider
 ### A jQuery slider that just slides.
 
-If you want to have a quick, lightweight slider, with just the arrows and no fancy effects, then you'll love Unslider. Weighing in at 3kb uncompressed, and 1.6kb compressed, it's an incredibly lightweight solution.
+If you want to have a quick, lightweight slider, with just the arrows and no fancy effects, then you'll love Unslider. Weighing in at 4kb uncompressed, and 1.9kb compressed, it's an incredibly lightweight solution.
 
 ## Features
 * Slides a list
@@ -15,9 +15,15 @@ To begin using Unslider, just include the files, and create a `div` with an unor
 
 Pretty straightforward, and nice and semantic. Lovely. Now, we need a touch of CSS as well:
 ```css
-.unslider { overflow: hidden; }
-	.unslider ul { position: relative; }
-	.unslider li { float: left; }
+.unslider {
+	overflow: hidden;
+}
+	.unslider ul {
+		position: relative;
+	}
+	.unslider li {
+		float: left;
+	}
 ```
 
 _This is the same as the contents for unslider.css, so if you're including that file, don't add this CSS._
