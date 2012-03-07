@@ -16,6 +16,7 @@ To begin using Unslider, just include the files, and create a `div` with an unor
 Pretty straightforward, and nice and semantic. Lovely. Now, we need a touch of CSS as well:
 ```css
 .unslider { overflow: hidden; }
+	.unslider ul { position: relative; }
 	.unslider li { float: left; }
 ```
 
