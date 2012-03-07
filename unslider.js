@@ -61,7 +61,7 @@
 			var me = $(this).addClass('unslider'),
 				list = me.children('ul'),
 				items = list.children('li'),
-				first = items.filter(':first'),
+				first = items.first(),
 				
 				itemCount = items.length + 2, //  Don't forget our clones!
 				
@@ -73,7 +73,7 @@
 	
 				//  Append the first and last items
 				first.addClass(o.activeClass).clone().attr('class', 'cloned').appendTo(list);	
-				items.filter(':last').clone().addClass('cloned').prependTo(list);	
+				items.last().clone().addClass('cloned').prependTo(list);	
 				
 				//  Set the width to stop wrapping, and since we have a clone, position it offscreen
 				list.css({width: width * itemCount, left: -width});
