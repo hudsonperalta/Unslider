@@ -48,10 +48,11 @@
 					afterSlide: function() {}
 				}, options),
 			c = 'cloned',
-			a = 'unslider-arrows';
+			a = 'unslider-arrows',
+			s = this;
 	
 		//  And loop every instance of the Unslider
-		return this.each(function() {
+		return s.each(function() {
 			var me = $(this).addClass('unslider'),
 				list = me.children('ul'),
 				items = list.children('li'),
@@ -144,6 +145,11 @@
 							$('.' + a + ' .' + keys[e.which]).click();
 						}
 					});
+				}
+				
+				//  Add touch support
+				if($.jQswipe) {
+					s.bind('swipe', function() { $('.' + a + ' .next').click(); });
 				}
 				
 				//  Autoplay
