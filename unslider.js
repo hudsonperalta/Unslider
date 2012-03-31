@@ -60,7 +60,7 @@
 				
 				itemCount = items.length + 2, //  Don't forget our clones!
 				
-				width = me.width(),
+				width = first.width(),
 				height = first.height(),
 				
 				setActive = function(el) { el.addClass(o.activeClass).siblings().removeClass(o.activeClass); };
