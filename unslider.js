@@ -77,7 +77,7 @@
 				
 				//  Get the arrows, if they want 'em.
 				if(o.arrows) {
-					$('<p class="' + a + '"><span class="arrow previous" /><span class="arrow next" /></p>').appendTo(me.parent()).find('.arrow').each(function() {
+					$('<p class="' + a + '"><span class="arrow previous" /><span class="arrow next" /></p>').appendTo(me).find('.arrow').each(function() {
 						
 						var me = $(this), dir = me.attr('class').split(' ')[1],
 							arrows = {previous: '&larr;', next: '&rarr;'};
