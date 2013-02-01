@@ -23,7 +23,8 @@
 			speed: 500,
 			delay: 3000, // false for no autoplay
 			complete: false, // when a slide's finished
-			keys: true
+			keys: true,
+			dots: true
 		};
 		
 		//  Create a deep clone for methods where context changes
@@ -33,7 +34,7 @@
 			this.el = el;
 			this.ul = el.children('ul');
 			this.max = [el.outerWidth(), el.outerHeight()];			
-			this.items = el.find('li').each(this.calculate);
+			this.items = this.ul.children('li').each(this.calculate);
 			
 			//  Check whether we're passing any options in to Unslider
 			if(opts) {
@@ -80,9 +81,11 @@
 				this.el.hover(this.stop, this.start);
 			}
 			
-			if(this.opts.keys) {
-				$(document).keydown(this.keys);
-			}
+			//  Custom keyboard support
+			this.opts.keys && $(document).keydown(this.keys);
+			
+			//  Dot pagination
+			this.opts.dots && this.dots();
 		};
 		
 		//  Move Unslider to a slide index
@@ -101,6 +104,9 @@
 					$.isFunction(_.opts.complete) && !cb && _.opts.complete(_.el);
 				});
 			}
+			
+			//  Handle those pesky dots
+			this.el.find('.unslider-dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
 		};
 		
 		//  Autoplay functionality
@@ -128,11 +134,21 @@
 				27: _.stop
 			};
 			
-			console.log(map[key]);
-			
 			if($.isFunction(map[key])) {
 				map[key]();
 			}
+		};
+		
+		this.dots = function() {
+			//  Create the HTML
+			var html = '<ol class="unslider-dots">';
+				$.each(this.items, function(index) { html += '<li class="unslider-dot">' + index + '</li>'; });
+				html += '</ol>';
+			
+			//  Add it to the Unslider
+			this.el.addClass('has-dots').append(html).find('.unslider-dot').click(function() {
+				_.move($(this).index());
+			});
 		};
 	};
 	
