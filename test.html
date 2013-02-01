@@ -11,7 +11,7 @@
 				
 				font: 13px "Helvetica Neue", sans-serif;
 			}
-			.unslider-test {
+			.unslider {
 				width: 700px;
 				height: 150px;
 				margin: 40px auto;
@@ -20,16 +20,16 @@
 				
 				background: #0f0;
 			}
-				.unslider-test ul {
+				.unslider ul {
 					list-style: none;
 				}
-				.unslider-test li {
+				.unslider li {
 					float: left;
 				}
 		</style>
 	</head>
 	<body>
-		<div class="unslider-test">
+		<div class="unslider unslider-test">
 			<ul>
 				<li>slide 1</li>
 				<li>slide 2<br>taller one</li>
@@ -39,7 +39,7 @@
 			</ul>
 		</div>
 		
-		<div class="unslider-test">
+		<div class="unslider unslider-testing">
 			<ul>
 				<li>slide a</li>
 				<li>slide b</li>
@@ -54,6 +54,9 @@
 		<script>
 			$(function() {
 				$('.unslider-test').unslider();
+				$('.unslider-testing').unslider({
+					delay: 1500
+				});
 			});
 		</script>
 	</body>

@@ -22,7 +22,8 @@
 		this.opts = {
 			speed: 500,
 			delay: 3000, // false for no autoplay
-			complete: false // when a slide's finished
+			complete: false, // when a slide's finished
+			keys: true
 		};
 		
 		//  Create a deep clone for methods where context changes
@@ -97,10 +98,16 @@
 			}
 		};
 		
+		//  Autoplay functionality
 		this.start = function() {
 			this.interval = setInterval(function() {
 				_.move(_.current + 1);
 			}, this.opts.delay);
+		};
+		
+		//  Stop autoplay
+		this.stop = function() {
+			this.interval = clearInterval(this.interval);
 		};
 	};
 	
@@ -112,11 +119,10 @@
 		return this.each(function(index) {
 			//  Cache a copy of $(this), so it 
 			var me = $(this);
-			
-			console.log(me, index + 1);
+			var instance = (new Unslider).init(me, o);
 			
 			//  Invoke an Unslider instance
-			me.data('unslider' + (len > 1 ? '-' + (index + 1) : ''), (new Unslider).init(me, o));
+			me.data('unslider' + (len > 1 ? '-' + (index + 1) : ''), instance);
 		});
 	};
 })(window.jQuery, false);
