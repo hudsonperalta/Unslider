@@ -32,7 +32,12 @@
 		//  Pass a jQuery element as the context with .call(), and the index as a parameter: Unslider.calculate.call($('li:first'), 0)
 		calculate: function(index) {
 			//  Add it to the sizes list
-			Unslider.sizes[index] = [this.outerWidth(), this.outerheight()];
+			Unslider.sizes[index] = [this.outerWidth(), this.outerHeight()];
+		},
+		
+		//  Move Unslider to a slide index
+		move: function(index) {
+			this.el.is(':animated') || this.el.animate({left: '-' + index + '%'});
 		}
 	};
 	
