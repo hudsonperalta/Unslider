@@ -23,8 +23,10 @@
 			speed: 500,
 			delay: 3000, // false for no autoplay
 			complete: false, // when a slide's finished
-			keys: true,
-			dots: true
+			keys: true, // keyboard shortcuts - disable if it breaks things
+			dots: false, // display ••••o• pagination
+			
+			fluid: false // is it a percentage width?
 		};
 		
 		//  Create a deep clone for methods where context changes
@@ -86,6 +88,11 @@
 			
 			//  Dot pagination
 			this.opts.dots && this.dots();
+			
+			//  Little patch for fluid-width sliders. Screw those guys.
+			this.opts.fluid && $(window).resize(function() {
+				_.el.css('width', (_.el.outerWidth() / _.el.parent().outerWidth()) * 100 + '%');
+			});
 		};
 		
 		//  Move Unslider to a slide index
