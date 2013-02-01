@@ -77,6 +77,7 @@
 			
 			if(this.opts.delay !== false) {
 				this.start();
+				this.el.hover(this.stop, this.start);
 			}
 		};
 		
@@ -100,14 +101,15 @@
 		
 		//  Autoplay functionality
 		this.start = function() {
-			this.interval = setInterval(function() {
+			_.interval = setInterval(function() {
 				_.move(_.current + 1);
-			}, this.opts.delay);
+			}, _.opts.delay);
 		};
 		
 		//  Stop autoplay
 		this.stop = function() {
-			this.interval = clearInterval(this.interval);
+			console.log('plz no moar');
+			_.interval = clearInterval(_.interval);
 		};
 	};
 	
