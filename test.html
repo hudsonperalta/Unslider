@@ -3,10 +3,58 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Unslider test</title>
+		
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				
+				font: 13px "Helvetica Neue", sans-serif;
+			}
+			.unslider-test {
+				width: 700px;
+				height: 150px;
+				margin: 40px auto;
+				
+				overflow: auto;
+				
+				background: #0f0;
+			}
+				.unslider-test ul {
+					list-style: none;
+				}
+				.unslider-test li {
+					float: left;
+				}
+		</style>
 	</head>
 	<body>
-		<ul class="unslider">
+		<div class="unslider-test">
+			<ul>
+				<li>slide 1</li>
+				<li>slide 2<br>taller one</li>
+				<li>slide 3</li>
+				<li>slide 4</li>
+				<li>slide 5</li>
+			</ul>
+		</div>
 		
-		</ul>
+		<div class="unslider-test">
+			<ul>
+				<li>slide a</li>
+				<li>slide b</li>
+				<li>slide c</li>
+				<li>slide d</li>
+				<li>slide e</li>
+			</ul>
+		</div>
+		
+		<script src="/jquery.js"></script>
+		<script src="unslider.js"></script>
+		<script>
+			$(function() {
+				$('.unslider-test').unslider();
+			});
+		</script>
 	</body>
 </html>
