@@ -11,22 +11,24 @@
 		this.el = f;
 		this.items = f;
 		
+		//  Dimensions
 		this.sizes = [];
 		this.max = [0,0];
 		
+		//  Current inded
 		this.current = 0;
 		
-		this.interval = false;
+		//  Start/stop timer
+		this.interval = f;
 				
 		//  Set some options
 		this.opts = {
 			speed: 500,
-			delay: 3000, // false for no autoplay
-			complete: false, // when a slide's finished
-			keys: true, // keyboard shortcuts - disable if it breaks things
-			dots: false, // display ••••o• pagination
-			
-			fluid: false // is it a percentage width?
+			delay: 3000, // f for no autoplay
+			complete: f, // when a slide's finished
+			keys: !f, // keyboard shortcuts - disable if it breaks things
+			dots: f, // display ••••o• pagination
+			fluid: f // is it a percentage width?
 		};
 		
 		//  Create a deep clone for methods where context changes
@@ -40,7 +42,7 @@
 			
 			//  Check whether we're passing any options in to Unslider
 			if(opts) {
-				this.opts = $.extend(opts);
+				this.opts = $.extend(this.opts, opts);
 			}
 			
 			//  Set up the Unslider
@@ -69,16 +71,14 @@
 			this.el.css({
 				overflow: 'hidden',
 				width: _.max[0],
-				height: 'auto'
+				height: this.items.first().outerHeight()
 			});
 			
 			//  Set the relative widths
 			this.ul.css({width: (this.items.length * 100) + '%', position: 'relative'});
 			this.items.css('width', (100 / this.items.length) + '%');
 			
-			this.move(this.current, true);
-			
-			if(this.opts.delay !== false) {
+			if(this.opts.delay !== f) {
 				this.start();
 				this.el.hover(this.stop, this.start);
 			}
@@ -103,9 +103,10 @@
 			
 			var target = this.items.eq(index);
 			var obj = {height: target.outerHeight()};
+			var speed = cb ? 5 : this.opts.speed;
 			
 			if(!this.ul.is(':animated')) {
-				this.el.animate(obj) && this.ul.animate($.extend({left: '-' + index + '00%'}, obj), function(data) {
+				this.el.animate(obj, speed) && this.ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, function(data) {
 					_.current = index;
 					$.isFunction(_.opts.complete) && !cb && _.opts.complete(_.el);
 				});
