@@ -79,12 +79,16 @@
 				this.start();
 				this.el.hover(this.stop, this.start);
 			}
+			
+			if(this.opts.keys) {
+				$(document).keydown(this.keys);
+			}
 		};
 		
 		//  Move Unslider to a slide index
 		this.move = function(index, cb) {
 			//  If it's out of bounds, go to the first slide
-			if(!this.items.eq(index).length) {
+			if(!this.items.eq(index).length || index < 0) {
 				index = 0;
 			}
 			
@@ -109,6 +113,26 @@
 		//  Stop autoplay
 		this.stop = function() {
 			_.interval = clearInterval(_.interval);
+			return _;
+		};
+		
+		//  Keypresses
+		this.keys = function(e) {
+			var key = e.which;
+			var map = {
+				//  Prev/next
+				37: function() { _.stop().move(_.current - 1) },
+				39: function() { _.stop().move(_.current + 1) },
+				
+				//  Esc
+				27: _.stop
+			};
+			
+			console.log(map[key]);
+			
+			if($.isFunction(map[key])) {
+				map[key]();
+			}
 		};
 	};
 	
