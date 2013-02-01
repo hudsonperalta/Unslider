@@ -108,7 +108,6 @@
 		
 		//  Stop autoplay
 		this.stop = function() {
-			console.log('plz no moar');
 			_.interval = clearInterval(_.interval);
 		};
 	};
