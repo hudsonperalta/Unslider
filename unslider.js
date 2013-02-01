@@ -98,9 +98,8 @@
 		//  Move Unslider to a slide index
 		this.move = function(index, cb) {
 			//  If it's out of bounds, go to the first slide
-			if(!this.items.eq(index).length || index < 0) {
-				index = 0;
-			}
+			if(!this.items.eq(index).length) index = 0;
+			if(index < 0) index = (this.items.length - 1);
 			
 			var target = this.items.eq(index);
 			var obj = {height: target.outerHeight()};
