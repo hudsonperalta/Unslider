@@ -28,7 +28,8 @@
 			complete: f, // when a slide's finished
 			keys: !f, // keyboard shortcuts - disable if it breaks things
 			dots: f, // display ••••o• pagination
-			fluid: f // is it a percentage width?
+			fluid: f, // is it a percentage width?,
+			arrows: !f
 		};
 		
 		//  Create a deep clone for methods where context changes
@@ -93,6 +94,13 @@
 			this.opts.fluid && $(window).resize(function() {
 				_.el.css('width', (_.el.outerWidth() / _.el.parent().outerWidth()) * 100 + '%');
 			});
+			
+			if(this.opts.arrows) {
+				this.el.parent().append('<p class="arrows"><span class="prev">←</span><span class="next">→</span></p>')
+					.find('.arrows span').click(function() {
+						$.isFunction(_[this.className]) && _[this.className]();
+					});
+			};
 		};
 		
 		//  Move Unslider to a slide index
@@ -113,7 +121,7 @@
 			}
 			
 			//  Handle those pesky dots
-			this.el.find('.unslider-dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
+			this.el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
 		};
 		
 		//  Autoplay functionality
@@ -134,8 +142,8 @@
 			var key = e.which;
 			var map = {
 				//  Prev/next
-				37: function() { _.stop().move(_.current - 1) },
-				39: function() { _.stop().move(_.current + 1) },
+				37: _.prev,
+				39: _.next,
 				
 				//  Esc
 				27: _.stop
@@ -146,14 +154,18 @@
 			}
 		};
 		
+		//  Arrow navigation
+		this.next = function() { return this.stop().move(_.current + 1) };
+		this.prev = function() { return this.stop().move(_.current - 1) };
+		
 		this.dots = function() {
 			//  Create the HTML
-			var html = '<ol class="unslider-dots">';
-				$.each(this.items, function(index) { html += '<li class="unslider-dot">' + index + '</li>'; });
+			var html = '<ol class="dots">';
+				$.each(this.items, function(index) { html += '<li class="dot">' + index + '</li>'; });
 				html += '</ol>';
 			
 			//  Add it to the Unslider
-			this.el.addClass('has-dots').append(html).find('.unslider-dot').click(function() {
+			this.el.addClass('has-dots').append(html).find('.dot').click(function() {
 				_.move($(this).index());
 			});
 		};
