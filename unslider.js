@@ -29,7 +29,7 @@
 			keys: !f, // keyboard shortcuts - disable if it breaks things
 			dots: f, // display ••••o• pagination
 			fluid: f, // is it a percentage width?,
-			arrows: !f
+			arrows: f
 		};
 		
 		//  Create a deep clone for methods where context changes
