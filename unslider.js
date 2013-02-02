@@ -1,171 +1,188 @@
 /**
- *  Unslider 0.3
- *  by @visualidiot
- *
- *  Licensed under the WTFPL, as always.
- *
- **
- *	The quickest way to set it up is like this.
- **
- *
- *  HTML:	<div id="slider">
- *				<ul>
- *					<li></li>
- *					<li></li>
- *					<li></li> <!-- you get the idea. -->
- *				</ul>
- *			</div>
- *
- *  CSS:	Provided in unslider.css
- *
- *	JS:     $('#slider').unslider();
+ *   Unslider by @idiot
  */
  
-(function($, d) {
-
-	/**
-	 *	 Move the Unslider
-	 */
-	$.fn.moveUnslider = function(pos, speed, easing, callback) {
-		return this.is(':animated') || this.stop().animate({left: parseFloat(pos)}, speed, easing, callback);
-	};
-
-	$.fn.unslider = function(options) {
+(function($, f) {
+	//  If there's no jQuery, Unslider can't work, so kill the operation.
+	if(!$) return f;
 	
-		//  Set the options
-		var o = $.extend({
-					activeClass: 'active',
-					arrows: true,
-					autoplay: false,
-					
-					//  Speeds + timing
-					speed: 500,
-					delay: 3000,
-					
-					easing: 'swing',
-					
-					//  Callbacks
-					afterSlide: function() {}
-				}, options),
-			c = 'cloned',
-			a = 'unslider-arrows',
-			s = this;
-	
-		//  And loop every instance of the Unslider
-		return s.each(function() {
-			var me = $(this).addClass('unslider'),
-				list = me.children('ul'),
-				items = list.children('li'),
-				first = items.first(),
+	var Unslider = function() {
+		//  Set up our elements
+		this.el = f;
+		this.items = f;
+		
+		//  Dimensions
+		this.sizes = [];
+		this.max = [0,0];
+		
+		//  Current inded
+		this.current = 0;
+		
+		//  Start/stop timer
+		this.interval = f;
 				
-				itemCount = items.length + 2, //  Don't forget our clones!
-				
-				width = first.width(),
-				height = first.height(),
-				
-				setActive = function(el) { el.addClass(o.activeClass).siblings().removeClass(o.activeClass); };
-				
-			//  Check we have two or more items (the itemCount adds two)
-			if(itemCount >= 4) {
-	
-				//  Append the first and last items
-				first.addClass(o.activeClass).clone().attr('class', c).appendTo(list);	
-				items.last().clone().addClass(c).prependTo(list);	
-				
-				//  Set the width to stop wrapping, and since we have a clone, position it offscreen
-				list.css({width: width * itemCount, left: -width});
-				
-				//  Get the arrows, if they want 'em.
-				if(o.arrows) {
-					$('<p class="' + a + '"><span class="arrow previous" /><span class="arrow next" /></p>').appendTo(me).find('.arrow').each(function() {
-						
-						var me = $(this), dir = me.attr('class').split(' ')[1],
-							arrows = {previous: '&larr;', next: '&rarr;'};
-						
-						me.attr('title', 'Click to show the ' + dir + ' slide').html(arrows[dir]);
-						
-					}).click(function() {
-						
-						var me = $(this),
-							dir = me.attr('class').split(' ')[1],
-							
-							current = items.filter('.' + o.activeClass),
-							margin = parseFloat(list.css('left')),
-							
-							actions = {
-								previous: function() {
-								
-									var first = current.prev().hasClass(c),
-										prev = first ? items.eq(-1) : current.prev();
-										
-									setActive(prev);
-									
-									return list.moveUnslider(margin + width, o.speed, o.easing, function() {
-									
-										if(parseFloat(list.css('left')) >= 0) {
-											list.css('left', -(width * (itemCount - 2)));
-										
-											//  Reset the margin so we can recalculate properly
-											margin = parseFloat(list.css('left'));
-										}
-									
-										if($.isFunction(o.afterSlide)) {
-											o.afterSlide.call(this);
-										}
-									});
-								},
-								next: function() {
-								
-									var last = current.next().hasClass(c),
-										next = last ? items.eq(0) : current.next();
-								
-									setActive(next);
-								
-									return list.moveUnslider(margin - width, o.speed, o.easing, function() {
-										
-										last && list.css('left', -width);
+		//  Set some options
+		this.opts = {
+			speed: 500,
+			delay: 3000, // f for no autoplay
+			complete: f, // when a slide's finished
+			keys: !f, // keyboard shortcuts - disable if it breaks things
+			dots: f, // display ••••o• pagination
+			fluid: f, // is it a percentage width?,
+			arrows: f
+		};
+		
+		//  Create a deep clone for methods where context changes
+		var _ = this;
 
-										if($.isFunction(o.afterSlide)) {
-											o.afterSlide.call(this);
-										}
-									});
-								}
-							};
-							
-						//  Run the action, based on the class of the link. Genius.
-						if(actions[dir]) {
-							actions[dir]();
-						}
-					});
-					
-					$(d).keyup(function(e) {
-						var keys = {37: 'previous', 39: 'next'};
-						
-						if(keys[e.which]) {
-							$('.' + a + ' .' + keys[e.which]).click();
-						}
-					});
-				}
-				
-				//  Add touch support
-				if($.jQswipe) {
-					s.bind('swipe', function() { $('.' + a + ' .next').click(); });
-				}
-				
-				//  Autoplay
-				if(o.autoplay) {
-					var cont = function() { $('.' + a + ' .next').click(); },
-						auto = setInterval(cont, o.delay);
-				
-					//  Turn off (and back on) on hover.
-					me.hover(function() {
-						clearInterval(auto);
-					}, function() {
-						auto = setInterval(cont, o.delay);
-					});
-				}
+		this.init = function(el, opts) {
+			this.el = el;
+			this.ul = el.children('ul');
+			this.max = [el.outerWidth(), el.outerHeight()];			
+			this.items = this.ul.children('li').each(this.calculate);
+			
+			//  Check whether we're passing any options in to Unslider
+			if(opts) {
+				this.opts = $.extend(this.opts, opts);
 			}
+			
+			//  Set up the Unslider
+			this.setup();
+			
+			return this;
+		};
+		
+		//  Get the width for an element
+		//  Pass a jQuery element as the context with .call(), and the index as a parameter: Unslider.calculate.call($('li:first'), 0)
+		this.calculate = function(index) {
+			var me = $(this),
+				width = me.outerWidth(), height = me.outerHeight();
+			
+			//  Add it to the sizes list
+			_.sizes[index] = [width, height];
+			
+			//  Set the max values
+			if(width > _.max[0]) _.max[0] = width;
+			if(height > _.max[1]) _.max[1] = height;
+		};
+		
+		//  Work out what methods need calling
+		this.setup = function() {
+			//  Set the main element
+			this.el.css({
+				overflow: 'hidden',
+				width: _.max[0],
+				height: this.items.first().outerHeight()
+			});
+			
+			//  Set the relative widths
+			this.ul.css({width: (this.items.length * 100) + '%', position: 'relative'});
+			this.items.css('width', (100 / this.items.length) + '%');
+			
+			if(this.opts.delay !== f) {
+				this.start();
+				this.el.hover(this.stop, this.start);
+			}
+			
+			//  Custom keyboard support
+			this.opts.keys && $(document).keydown(this.keys);
+			
+			//  Dot pagination
+			this.opts.dots && this.dots();
+			
+			//  Little patch for fluid-width sliders. Screw those guys.
+			this.opts.fluid && $(window).resize(function() {
+				_.el.css('width', (_.el.outerWidth() / _.el.parent().outerWidth()) * 100 + '%');
+			});
+			
+			if(this.opts.arrows) {
+				this.el.parent().append('<p class="arrows"><span class="prev">←</span><span class="next">→</span></p>')
+					.find('.arrows span').click(function() {
+						$.isFunction(_[this.className]) && _[this.className]();
+					});
+			};
+		};
+		
+		//  Move Unslider to a slide index
+		this.move = function(index, cb) {
+			//  If it's out of bounds, go to the first slide
+			if(!this.items.eq(index).length) index = 0;
+			if(index < 0) index = (this.items.length - 1);
+			
+			var target = this.items.eq(index);
+			var obj = {height: target.outerHeight()};
+			var speed = cb ? 5 : this.opts.speed;
+			
+			if(!this.ul.is(':animated')) {
+				this.el.animate(obj, speed) && this.ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, function(data) {
+					_.current = index;
+					$.isFunction(_.opts.complete) && !cb && _.opts.complete(_.el);
+				});
+			}
+			
+			//  Handle those pesky dots
+			this.el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
+		};
+		
+		//  Autoplay functionality
+		this.start = function() {
+			_.interval = setInterval(function() {
+				_.move(_.current + 1);
+			}, _.opts.delay);
+		};
+		
+		//  Stop autoplay
+		this.stop = function() {
+			_.interval = clearInterval(_.interval);
+			return _;
+		};
+		
+		//  Keypresses
+		this.keys = function(e) {
+			var key = e.which;
+			var map = {
+				//  Prev/next
+				37: _.prev,
+				39: _.next,
+				
+				//  Esc
+				27: _.stop
+			};
+			
+			if($.isFunction(map[key])) {
+				map[key]();
+			}
+		};
+		
+		//  Arrow navigation
+		this.next = function() { return this.stop().move(_.current + 1) };
+		this.prev = function() { return this.stop().move(_.current - 1) };
+		
+		this.dots = function() {
+			//  Create the HTML
+			var html = '<ol class="dots">';
+				$.each(this.items, function(index) { html += '<li class="dot">' + index + '</li>'; });
+				html += '</ol>';
+			
+			//  Add it to the Unslider
+			this.el.addClass('has-dots').append(html).find('.dot').click(function() {
+				_.move($(this).index());
+			});
+		};
+	};
+	
+	//  Create a jQuery plugin
+	$.fn.unslider = function(o) {
+		var len = this.length;
+		
+		//  Enable multiple-slider support
+		return this.each(function(index) {
+			//  Cache a copy of $(this), so it 
+			var me = $(this);
+			var instance = (new Unslider).init(me, o);
+			
+			//  Invoke an Unslider instance
+			me.data('unslider' + (len > 1 ? '-' + (index + 1) : ''), instance);
 		});
 	};
-
-})(jQuery, document);
+})(window.jQuery, false);
