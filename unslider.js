@@ -29,7 +29,6 @@
 			keys: !f, // keyboard shortcuts - disable if it breaks things
 			dots: f, // display ••••o• pagination
 			fluid: f, // is it a percentage width?,
-			arrows: f
 		};
 		
 		//  Create a deep clone for methods where context changes
@@ -42,9 +41,7 @@
 			this.items = this.ul.children('li').each(this.calculate);
 			
 			//  Check whether we're passing any options in to Unslider
-			if(opts) {
-				this.opts = $.extend(this.opts, opts);
-			}
+			this.opts = $.extend(this.opts, opts);
 			
 			//  Set up the Unslider
 			this.setup();
