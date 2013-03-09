@@ -1,0 +1,104 @@
+* {
+	margin: 0;
+	padding: 0;
+	
+	-webkit-font-smoothing: antialiased;
+	
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+body {
+	color: #a48d66;
+	font: 14px/23px proxima-nova-alt, "Proxima Nova Alt", sans-serif;
+}
+
+h1, h2, h3, h4 {
+	font-weight: 300;
+	font-family: bree-web, Bree, sans-serif;
+}
+
+#logo {
+	position: absolute;
+	left: 80px;
+	top: 40px;
+	z-index: 2;
+	
+	margin-left: -17px;
+}
+
+.banner {
+	position: relative;
+	width: 100%;
+	overflow: auto;
+	
+	font-size: 18px;
+	line-height: 24px;
+	text-align: center;
+	
+	color: rgba(255,255,255,.6);
+	text-shadow: 0 0 1px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.3);
+	
+	background: #5b4d3d;
+	box-shadow: 0 1px 2px rgba(0,0,0,.25);
+}
+	.banner ul {
+		list-style: none;
+		width: 300%;
+	}
+	.banner li {
+		display: block;
+		float: left;
+		width: 33%;
+		padding: 160px 0 110px;
+		
+		min-height: 350px;
+		
+		-webkit-background-size: 100% 100%;
+		-moz-background-size: 100% 100%;
+		-o-background-size: 100% 100%;
+		-ms-background-size: 100% 100%;
+		background-size: 100% 100%;
+		
+		box-shadow: inset 0 -3px 6px rgba(0,0,0,.1);
+	}
+	
+	.banner h1, .banner h2 {
+		font-size: 40px;
+		line-height: 52px;
+		
+		color: #fff;
+	}
+	
+	.banner .btn {
+		display: inline-block;
+		margin: 25px 0 0;
+		padding: 9px 22px 7px;
+		clear: both;
+		
+		color: #fff;
+		font-size: 12px;
+		font-weight: bold;
+		text-transform: uppercase;
+		text-decoration: none;
+		
+		border: 2px solid rgba(255,255,255,.4);
+		border-radius: 5px;
+		
+		-webkit-filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+		-moz-filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+		-ms-filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+		-o-filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+		filter: drop-shadow(0 1px 2px rgba(0,0,0,.5));
+	}
+		.banner .btn:hover {
+			background: rgba(255,255,255,.05);
+		}
+		.banner .btn:active {
+			-webkit-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+			-moz-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+			-ms-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+			-o-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+			filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
+		}

@@ -152,8 +152,8 @@
 		};
 		
 		//  Arrow navigation
-		this.next = function() { return this.stop().move(_.current + 1) };
-		this.prev = function() { return this.stop().move(_.current - 1) };
+		this.next = function() { return _.stop().move(_.current + 1) };
+		this.prev = function() { return _.stop().move(_.current - 1) };
 		
 		this.dots = function() {
 			//  Create the HTML
