@@ -249,7 +249,9 @@
 		<script src="/jquery.js"></script>
 		<script src="../unslider.js"></script>
 		<script>
-			$('.banner').unslider();
+			$('.banner').unslider({
+				fluid: true
+			});
 		
 			//  Find any element starting with a # in the URL
 			//  And listen to any click events it fires

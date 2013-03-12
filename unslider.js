@@ -89,7 +89,7 @@
 			
 			//  Little patch for fluid-width sliders. Screw those guys.
 			this.opts.fluid && $(window).resize(function() {
-				_.el.css('width', (_.el.outerWidth() / _.el.parent().outerWidth()) * 100 + '%');
+				_.el.css('width', Math.min(Math.round((_.el.outerWidth() / _.el.parent().outerWidth()) * 100), 100) + '%');
 			});
 			
 			if(this.opts.arrows) {
@@ -98,6 +98,11 @@
 						$.isFunction(_[this.className]) && _[this.className]();
 					});
 			};
+			
+			//  Swipe support
+			if($.events.swipe) {
+				this.el.on('swipeleft', _.prev).on('swiperight', _.next);
+			}
 		};
 		
 		//  Move Unslider to a slide index
