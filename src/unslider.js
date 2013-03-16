@@ -115,15 +115,15 @@
 			var obj = {height: target.outerHeight()};
 			var speed = cb ? 5 : this.opts.speed;
 			
-			if(!this.ul.is(':animated')) {
+			if(!this.ul.is(':animated')) {			
 				this.el.animate(obj, speed) && this.ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, function(data) {
+					//  Handle those pesky dots
+					_.el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
+					
 					_.current = index;
 					$.isFunction(_.opts.complete) && !cb && _.opts.complete(_.el);
 				});
 			}
-			
-			//  Handle those pesky dots
-			this.el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
 		};
 		
 		//  Autoplay functionality
