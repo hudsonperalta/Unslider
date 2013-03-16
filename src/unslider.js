@@ -100,7 +100,7 @@
 			};
 			
 			//  Swipe support
-			if($.events.swipe) {
+			if($.event.swipe) {
 				this.el.on('swipeleft', _.prev).on('swiperight', _.next);
 			}
 		};
@@ -163,7 +163,7 @@
 		this.dots = function() {
 			//  Create the HTML
 			var html = '<ol class="dots">';
-				$.each(this.items, function(index) { html += '<li class="dot">' + index + '</li>'; });
+				$.each(this.items, function(index) { html += '<li class="dot' + (index < 1 ? ' active' : '') + '">' + index + '</li>'; });
 				html += '</ol>';
 			
 			//  Add it to the Unslider
