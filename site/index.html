@@ -135,6 +135,38 @@
 	dots: true,               <span>//  Display dot navigation</span>
 	fluid: false              <span>//  Support responsive design. May break non-responsive designs</span>
 });</pre>
+<br><br><br>
+				<h2>Touch support</h2>
+				<p>If you want to add mobile/touch/swipe/whatever support to Unslider, you’ll need to include the <a href="http://stephband.info/jquery.event.swipe/">jQuery.event.swipe</a> plugin, then it’ll work out the box. Easy!</p>
+				
+<br><br><br>
+				<h2>Accessing Unslider properties</h2>
+				<p>Using jQuery’s wonderful <code>data</code> method, you can access and manually override any methods. Here’s a list of what you can do:</p>
+				
+				<pre>var slidey = $('.banner').unslider(),
+    data = slidey.data('unslider');
+    
+<span>//  Start Unslider</span>
+data.start();
+
+<span>//  Pause Unslider</span>
+data.stop();
+
+<span>//  Move to a slide index, with optional callback</span>
+data.move(2, function() {});
+<span>//  data.move(0);</span>
+
+<span>//  Manually enable keyboard shortcuts</span>
+data.keys();
+
+<span>//  Move to the next slide (or the first slide if there isn't one)</span>
+data.next();
+
+<span>//  Move to the previous slide (or the last slide if there isn't one)</span>
+data.prev();
+
+<span>//  Append the navigation dots manually</span>
+data.dots();</pre>
 			</div>
 		</div>
 		

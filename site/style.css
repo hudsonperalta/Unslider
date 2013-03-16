@@ -233,6 +233,16 @@ h1, h2, h3, h4, b {
 	box-shadow: inset 0 2px 3px rgba(0,0,0,.2);
 	text-shadow: 0 1px 1px rgba(0,0,0,.2);
 }
+	.options a {
+		opacity: .7;
+		color: #fff;
+		border-bottom: 1px solid rgba(255,255,255,.2);
+		text-decoration: none;
+	}
+		.options a:hover {
+			opacity: 1;
+			border-bottom-color: rgba(255,255,255,.3);
+		}
 	.options p {
 		font-size: 16px;
 		line-height: 25px;
