@@ -17,6 +17,8 @@
 body {
 	color: #a48d66;
 	font: 14px/23px proxima-nova-alt, "Proxima Nova Alt", sans-serif;
+	
+	-webkit-transform: translateZ(0);
 }
 
 h1, h2, h3, h4, b {
@@ -371,5 +373,12 @@ h1, h2, h3, h4, b {
 	.how pre {
 		position: static;
 		width: 100%;
+	}
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	.features li:before {
+		background: url('img/icons@2x.png');
+		background-size: 100%;
 	}
 }
