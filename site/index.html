@@ -186,9 +186,14 @@ data.dots();</pre>
 			
 		<script src="//unslider.com/unslider.js"></script>
 		<script>
+			if(window.chrome) {
+				$('.banner li').css('background-size', '100% 100%');
+			}
+			
 			$('.banner').unslider({
 				fluid: true,
-				dots: true
+				dots: true,
+				speed: 500
 			});
 		
 			//  Find any element starting with a # in the URL
