@@ -300,6 +300,10 @@ h1, h2, h3, h4, b {
 		
 		border: none;
 	}
+	    .footer .btn span {
+	        font-weight: normal;
+	        opacity: .8;
+	    }
 		.footer .btn:hover {
 			opacity: .95;
 			color: #fff;
