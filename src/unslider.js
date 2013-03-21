@@ -88,9 +88,14 @@
 			this.opts.dots && this.dots();
 			
 			//  Little patch for fluid-width sliders. Screw those guys.
-			this.opts.fluid && $(window).resize(function() {
-				_.el.css('width', Math.min(Math.round((_.el.outerWidth() / _.el.parent().outerWidth()) * 100), 100) + '%');
-			});
+			if(this.opts.fluid) {
+				var resize = function() {
+					_.el.css('width', Math.min(Math.round((_.el.outerWidth() / _.el.parent().outerWidth()) * 100), 100) + '%');
+				};
+				
+				resize();
+				$(window).resize(resize);
+			}
 			
 			if(this.opts.arrows) {
 				this.el.parent().append('<p class="arrows"><span class="prev">←</span><span class="next">→</span></p>')
