@@ -13,7 +13,7 @@
 		this.max = [0,0];
 
 		//  Current inded
-		this.current = 0;
+		this.active = 0;
 
 		//  Start/stop timer
 		this.interval = f;
@@ -115,7 +115,7 @@
 					if (timer) clearTimeout(timer);
 
 					timer = setTimeout(function() {
-						styl = {height: items.eq(_.current).outerHeight()};
+						styl = {height: items.eq(_.active).outerHeight()};
 
 						ul.css(styl);
 						styl['width'] = Math.min(Math.round((el.outerWidth() / el.parent().outerWidth()) * 100), 100) + '%';
@@ -131,7 +131,7 @@
 		};
 
 		//  Move Unslider to a slide index
-		this.move = function(index) {
+		this.to = function(index) {
 			var opt = _.opts,
 				items = _.items,
 				target = items.eq(index),
@@ -173,7 +173,7 @@
 		//  Before/after callbacks
 		this.before = function(before, index, name) {
 			$.isFunction(before) && before(_.el);
-			_.current = index;
+			_.active = index;
 			_.el.find('.dot:eq(' + index + ')').addClass(name).siblings().removeClass(name);
 		};
 		this.after = function() {
@@ -185,7 +185,7 @@
 		this.start = function(hover) {
 			hover !== f && _.stop();
 			_.interval = setInterval(function() {
-				_.move(_.current + 1);
+				_.to(_.active + 1);
 			}, _.opts.delay | 0);
 		};
 
@@ -209,10 +209,10 @@
 
 		//  Navigation
 		this.next = function() {
-			return _.stop().move(_.current + 1)
+			return _.stop().to(_.active + 1)
 		};
 		this.prev = function() {
-			return _.stop().move(_.current - 1)
+			return _.stop().to(_.active - 1)
 		};
 		this.nav = function(name, html) {
 			if (name == 'dot') {
@@ -228,7 +228,7 @@
 
 			this.el.addClass('has-' + name + 's').append(html).find('.' + name).click(function() {
 				var me = $(this);
-				me.hasClass('dot') ? _.stop().move(me.index()) : me.hasClass('prev') ? _.prev() : _.next();
+				me.hasClass('dot') ? _.stop().to(me.index()) : me.hasClass('prev') ? _.prev() : _.next();
 			});
 		};
 	};
