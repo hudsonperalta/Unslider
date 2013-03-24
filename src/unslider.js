@@ -16,10 +16,10 @@
 		this.active = 0;
 
 		//  Start/stop timer
-		this.interval = f;
+		this.timer = f;
 
 		//  Set some options
-		this.opts = {
+		this.opt = {
 			speed: 500, // transition speed
 			delay: 3000, // f for no autoplay
 			pause: !f, // pause on hover
@@ -31,6 +31,9 @@
 
 		//  Create a deep clone for methods where context changes
 		var _ = this;
+
+		//  Percentage
+		var num = 100;
 
 		//  Detect CSS3 support
 		var doc = document,
@@ -48,14 +51,14 @@
 		for (prop in props)
 			if (typeof doc.documentElement.style[prop] == 'string') css3 = [prop, props[prop]];
 
-		this.init = function(el, opts) {
+		this.init = function(el, opt) {
 			this.el = el;
 			this.ul = el.children('ul');
 			this.max = [el.outerWidth(), el.outerHeight()];
 			this.items = this.ul.children('li').each(this.calc);
 
 			//  Check whether we're passing any options in to Unslider
-			this.opts = $.extend(this.opts, opts);
+			this.opt = $.extend(this.opt, opt);
 
 			//  Set up the Unslider
 			this.setup();
@@ -79,7 +82,7 @@
 
 		//  Work out what methods need calling
 		this.setup = function() {
-			var opt = _.opts,
+			var opt = _.opt,
 				items = _.items,
 				itemsL = items.length,
 				el = _.el,
@@ -89,16 +92,27 @@
 			el.css({width: _.max[0], height: items.first().outerHeight(), overflow: 'hidden'});
 
 			//  Set the relative widths
-			ul.css({position: 'relative', left: 0, width: (itemsL * 100) + '%'});
-			items.css('width', (100 / itemsL) + '%');
+			ul.css({position: 'relative', left: 0, width: (itemsL * num) + '%'});
+			items.css('width', (num / itemsL) + '%');
 
 			if (opt.delay !== f) {
 				_.start(f);
 				opt.pause && el.hover(_.stop, _.start);
 			};
 
-			//  Custom keyboard support
-			opt.keys && $(doc).keydown(_.keys);
+			//  Keyboard support
+			if (opt.keys) {
+				$(doc).keydown(function(e) {
+					var key = e.which;
+
+					if (key == 37)
+						_.prev(); // Left
+					else if (key == 39)
+						_.next(); // Right
+					else if (key == 27)
+						_.stop(); // Esc
+				});
+			}
 
 			//  Dot pagination
 			opt.dots && _.nav('dot');
@@ -108,17 +122,17 @@
 
 			//  Little patch for fluid-width sliders. Screw those guys.
 			if (opt.fluid) {
-				var timer, resize, styl;
+				var resize, throttle, styl;
 
 				//  Throttle, IE patch
 				(resize = function() {
-					if (timer) clearTimeout(timer);
+					if (throttle) clearTimeout(throttle);
 
-					timer = setTimeout(function() {
+					throttle = setTimeout(function() {
 						styl = {height: items.eq(_.active).outerHeight()};
 
 						ul.css(styl);
-						styl['width'] = Math.min(Math.round((el.outerWidth() / el.parent().outerWidth()) * 100), 100) + '%';
+						styl['width'] = Math.min(Math.round((el.outerWidth() / el.parent().outerWidth()) * num), num) + '%';
 						el.css(styl);
 					}, 50);
 				})();
@@ -132,7 +146,7 @@
 
 		//  Move Unslider to a slide index
 		this.to = function(index) {
-			var opt = _.opts,
+			var opt = _.opt,
 				items = _.items,
 				target = items.eq(index),
 				el = _.el,
@@ -177,34 +191,22 @@
 			_.el.find('.dot:eq(' + index + ')').addClass(name).siblings().removeClass(name);
 		};
 		this.after = function() {
-			var after = _.opts.after;
+			var after = _.opt.after;
 			$.isFunction(after) && after(_.el);
 		};
 
 		//  Autoplay functionality
 		this.start = function(hover) {
 			hover !== f && _.stop();
-			_.interval = setInterval(function() {
+			_.timer = setInterval(function() {
 				_.to(_.active + 1);
-			}, _.opts.delay | 0);
+			}, _.opt.delay | 0);
 		};
 
 		//  Stop autoplay
 		this.stop = function() {
-			_.interval = clearInterval(_.interval);
+			_.timer = clearInterval(_.timer);
 			return _;
-		};
-
-		//  Keypresses
-		this.keys = function(e) {
-			var key = e.which;
-
-			if (key == 37)
-				_.prev(); // Left
-			else if (key == 39)
-				_.next(); // Right
-			else if (key == 27)
-				_.stop(); // Esc
 		};
 
 		//  Navigation
