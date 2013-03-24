@@ -1,9 +1,9 @@
 * {
 	margin: 0;
 	padding: 0;
-	
+
 	-webkit-font-smoothing: antialiased;
-	
+
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
@@ -30,7 +30,7 @@ h1, h2, h3, h4, b {
 	b {
 		font-weight: 500;
 		font-size: 16px;
-		
+
 		color: #c3522f;
 	}
 
@@ -39,7 +39,7 @@ h1, h2, h3, h4, b {
 	left: 80px;
 	top: 40px;
 	z-index: 2;
-	
+
 	margin-left: -17px;
 }
 
@@ -47,14 +47,14 @@ h1, h2, h3, h4, b {
 	position: relative;
 	width: 100%;
 	overflow: auto;
-	
+
 	font-size: 18px;
 	line-height: 24px;
 	text-align: center;
-	
+
 	color: rgba(255,255,255,.6);
 	text-shadow: 0 0 1px rgba(0,0,0,.05), 0 1px 2px rgba(0,0,0,.3);
-	
+
 	background: #5b4d3d;
 	box-shadow: 0 1px 2px rgba(0,0,0,.25);
 }
@@ -66,38 +66,40 @@ h1, h2, h3, h4, b {
 		display: block;
 		float: left;
 		width: 33%;
-		padding: 160px 0 110px;
-		
 		min-height: 350px;
-		
-/*		-webkit-background-size: 100% 100%;*/
-		-moz-background-size: 100% 100%;
+
 		-o-background-size: 100% 100%;
 		-ms-background-size: 100% 100%;
-/*		background-size: 100% 100%;*/
-		
+		-moz-background-size: 100% 100%;
+		-webkit-background-size: 100% 100%;
+		background-size: 100% 100%;
+
 		box-shadow: inset 0 -3px 6px rgba(0,0,0,.1);
 	}
-	
+
+	.banner .inner {
+		padding: 160px 0 110px;
+	}
+
 	.banner h1, .banner h2 {
 		font-size: 40px;
 		line-height: 52px;
-		
+
 		color: #fff;
 	}
-	
+
 	.banner .btn {
 		display: inline-block;
 		margin: 25px 0 0;
 		padding: 9px 22px 7px;
 		clear: both;
-		
+
 		color: #fff;
 		font-size: 12px;
 		font-weight: bold;
 		text-transform: uppercase;
 		text-decoration: none;
-		
+
 		border: 2px solid rgba(255,255,255,.4);
 		border-radius: 5px;
 	}
@@ -111,7 +113,7 @@ h1, h2, h3, h4, b {
 			-o-filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
 			filter: drop-shadow(0 -1px 2px rgba(0,0,0,.5));
 		}
-		
+
 	.banner .btn, .banner .dot {
 		-webkit-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
 		-moz-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
@@ -119,7 +121,7 @@ h1, h2, h3, h4, b {
 		-o-filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
 		filter: drop-shadow(0 1px 2px rgba(0,0,0,.3));
 	}
-	
+
 	.banner .dots {
 		position: absolute;
 		left: 0;
@@ -131,15 +133,15 @@ h1, h2, h3, h4, b {
 			width: 10px;
 			height: 10px;
 			margin: 0 4px;
-			
+
 			text-indent: -999em;
-			
+
 			border: 2px solid #fff;
 			border-radius: 6px;
-			
+
 			cursor: pointer;
 			opacity: .4;
-			
+
 			-webkit-transition: background .5s, opacity .5s;
 			-moz-transition: background .5s, opacity .5s;
 			transition: background .5s, opacity .5s;
@@ -148,11 +150,23 @@ h1, h2, h3, h4, b {
 				background: #fff;
 				opacity: 1;
 			}
-		
+
+	.banner .arrows {
+		position: absolute;
+		bottom: 20px;
+		right: 20px;
+		color: #fff;
+	}
+		.banner .arrow {
+			display: inline;
+			padding-left: 10px;
+			cursor: pointer;
+		}
+
 .features {
 	overflow: hidden;
 	padding: 50px 0;
-	
+
 	background: #f7f7f6;
 	box-shadow: inset 0 -1px 3px rgba(0,0,0,.03);
 }
@@ -160,7 +174,7 @@ h1, h2, h3, h4, b {
 		position: relative;
 		padding: 0 25px 0 40px;
 		list-style: none;
-		
+
 		width: 25%;
 		float: left;
 	}
@@ -169,11 +183,11 @@ h1, h2, h3, h4, b {
 			position: absolute;
 			left: 0;
 			top: 0;
-			
+
 			display: block;
 			width: 24px;
 			height: 22px;
-			
+
 			background: url('img/icons.png');
 		}
 			.features li.browser:before { background-position: 0 -44px; }
@@ -183,7 +197,7 @@ h1, h2, h3, h4, b {
 		display: block;
 		padding-bottom: 6px;
 	}
-	
+
 .how {
 	padding: 60px 0;
 }
@@ -207,29 +221,29 @@ h1, h2, h3, h4, b {
 		position: absolute;
 		left: 450px;
 		top: 0;
-		
+
 		width: 495px;
 		padding: 20px 25px;
-		
+
 		background: #f8f5f0;
 		color: #8a785d;
-		
+
 		font-size: 12px;
 		line-height: 18px;
-		
+
 		border-radius: 5px;
 		box-shadow: inset 0 2px 2px rgba(180,157,125,.15), inset 0 0 1px rgba(0,0,0,.2);
 	}
 	.how p {
 		padding-bottom: 15px;
 	}
-	
+
 .options {
 	padding: 60px 0;
-	
+
 	background: #39342d;
 	color: #7b7368;
-	
+
 	box-shadow: inset 0 2px 3px rgba(0,0,0,.2);
 	text-shadow: 0 1px 1px rgba(0,0,0,.2);
 }
@@ -246,7 +260,7 @@ h1, h2, h3, h4, b {
 	.options p {
 		font-size: 16px;
 		line-height: 25px;
-		
+
 		padding-bottom: 20px;
 	}
 	.options h2 {
@@ -255,20 +269,20 @@ h1, h2, h3, h4, b {
 	}
 	.options pre {
 		padding: 20px 25px;
-		
+
 		background: #342f29;
 		color: #988f81;
-		
+
 		font-size: 13px;
 		line-height: 19px;
-		
+
 		box-shadow: inset 0 2px 2px rgba(0,0,0,.15), inset 0 0 1px rgba(0,0,0,.1);
 		border-radius: 5px;
 	}
 		.options pre span {
 			color: #706657;
 		}
-		
+
 .footer {
 	padding: 80px 0 60px;
 	text-align: center;
@@ -277,7 +291,7 @@ h1, h2, h3, h4, b {
 		display: inline-block;
 		padding: 13px 24px 10px;
 		margin-bottom: 15px;
-		
+
 		background-color: #c4652d;
 		background-image: -webkit-gradient(linear, left top, left bottom, from(#d07936), to(#b95124));
 		background-image: -webkit-linear-gradient(top, #d07936, #b95124);
@@ -286,18 +300,18 @@ h1, h2, h3, h4, b {
 		background-image: -ms-linear-gradient(top, #d07936, #b95124);
 		background-image: linear-gradient(top, #d07936, #b95124);
 		filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#d07936', EndColorStr='#b95124');
-		
+
 		border-radius: 5px;
 		box-shadow: inset 0 0 0 1px rgba(0,0,0,.2), inset 0 -1px 2px rgba(0,0,0,.15), inset 0 2px 0 rgba(255,255,255,.2), 0 1px 1px rgba(0,0,0,.1);
-		
+
 		color: #fff;
 		text-shadow: 0 1px 2px rgba(0,0,0,.2);
-		
+
 		font-size: 12px;
 		line-height: 18px;
 		font-weight: bold;
 		text-transform: uppercase;
-		
+
 		border: none;
 	}
 	    .footer .btn span {
@@ -318,12 +332,12 @@ h1, h2, h3, h4, b {
 			background-image: -ms-linear-gradient(top, #b55625, #c3692d);
 			background-image: linear-gradient(top, #b55625, #c3692d);
 			filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#b55625', EndColorStr='#c3692d');
-			
+
 			box-shadow: inset 0 0 0 1px rgba(0,0,0,.2), inset 0 -1px 2px rgba(255,255,255,.1), inset 0 2px 2px rgba(0,0,0,.2), 0 1px 1px rgba(0,0,0,.1);
 		}
 	.footer a {
 		margin: 0 4px;
-		
+
 		color: #79654e;
 		text-decoration: none;
 		border-bottom: 1px solid #ddd2c6;
@@ -346,15 +360,17 @@ h1, h2, h3, h4, b {
 		left: 50px;
 		top: 30px;
 	}
-	
+
 	.banner h1, .banner h2 {
 		font-size: 24px;
 		line-height: 30px;
 	}
 	.banner ul li {
+		height: 240px;
+	}
+	.banner .inner {
 		padding-top: 100px;
 		padding-bottom: 50px;
-		height: 240px;
 	}
 	.banner p {
 		font-size: 15px;
