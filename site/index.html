@@ -167,7 +167,7 @@
         var fn = this.className.split(' ')[1];
 
         <span>//  Either do unslider.data('unslider').next() or .prev() depending on the className</span>
-        unslider.data('unslider')[fn])();
+        unslider.data('unslider')[fn]();
     });
 &lt;/script&gt;
 </pre>
@@ -216,16 +216,16 @@ data.dots();</pre>
 		<script src="//stephband.info/jquery.event.move/js/jquery.event.move.js"></script>
 		<script src="//stephband.info/jquery.event.swipe/js/jquery.event.swipe.js"></script>
 
-		<script src="../src/unslider.min.js"></script>
+		<script src="//unslider.com/unslider.min.js"></script>
 		<script>
 			if(window.chrome) {
 				$('.banner li').css('background-size', '100% 100%');
 			}
 
 			$('.banner').unslider({
+				arrows: true,
 				fluid: true,
-				dots: true,
-				speed: 500
+				dots: true
 			});
 
 			//  Find any element starting with a # in the URL

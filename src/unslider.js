@@ -3,9 +3,6 @@
  */
 
 (function($, f) {
-	//  If there's no jQuery, Unslider can't work, so kill the operation.
-	if(!$) return f;
-
 	var Unslider = function() {
 		//  Set up our elements
 		this.el = f;
@@ -23,38 +20,39 @@
 
 		//  Set some options
 		this.opts = {
-			speed: 500,
+			speed: 500, // transition speed
 			delay: 3000, // f for no autoplay
-			complete: f, // when a slide's finished
+			pause: !f, // pause on hover
 			keys: !f, // keyboard shortcuts - disable if it breaks things
 			dots: f, // display ••••o• pagination
-			fluid: f // is it a percentage width?,
+			arrows: f, // display arrows ← →
+			fluid: f // is it a percentage width?
 		};
 
 		//  Create a deep clone for methods where context changes
 		var _ = this;
 
-		// Check for CSS3 support
-		var css3 = (function(doc) {
-			var prop = {
-				OTransition: ['oTransitionEnd otransitionend', 'OTransform'],
-				msTransition: ['transitionend', 'msTransform'],
-				MozTransition: ['transitionend', 'MozTransform'],
-				WebkitTransition: ['webkitTransitionEnd', 'webkitTransform'],
-				transition: ['transitionend', 'transform']
-			};
+		//  Detect CSS3 support
+		var doc = document,
+			transit = 'transitionend',
+			transitC = 'TransitionEnd',
+			props = {
+				OTransition: 'o' + transitC + ' o' + transit,
+				msTransition: transit,
+				MozTransition: transit,
+				WebkitTransition: 'webkit' + transitC,
+				transition: transit
+			},
+			css3;
 
-			for (each in prop)
-				if (typeof doc.style[each] == 'string') return {name: each, callback: prop[each][0], accel: prop[each][1]};
-
-			return f;
-		})(document.body || document.documentElement);
+		for (prop in props)
+			if (typeof doc.documentElement.style[prop] == 'string') css3 = [prop, props[prop]];
 
 		this.init = function(el, opts) {
 			this.el = el;
 			this.ul = el.children('ul');
 			this.max = [el.outerWidth(), el.outerHeight()];
-			this.items = this.ul.children('li').each(this.calculate);
+			this.items = this.ul.children('li').each(this.calc);
 
 			//  Check whether we're passing any options in to Unslider
 			this.opts = $.extend(this.opts, opts);
@@ -66,8 +64,8 @@
 		};
 
 		//  Get the width for an element
-		//  Pass a jQuery element as the context with .call(), and the index as a parameter: Unslider.calculate.call($('li:first'), 0)
-		this.calculate = function(index) {
+		//  Pass a jQuery element as the context with .call(), and the index as a parameter: Unslider.calc.call($('li:first'), 0)
+		this.calc = function(index) {
 			var me = $(this),
 				width = me.outerWidth(), height = me.outerHeight();
 
@@ -75,113 +73,120 @@
 			_.sizes[index] = [width, height];
 
 			//  Set the max values
-			if(width > _.max[0]) _.max[0] = width;
-			if(height > _.max[1]) _.max[1] = height;
+			if (width > _.max[0]) _.max[0] = width;
+			if (height > _.max[1]) _.max[1] = height;
 		};
 
 		//  Work out what methods need calling
 		this.setup = function() {
-			var elCSS = {width: _.max[0], height: this.items.first().outerHeight(), overflow: 'hidden'},
-				ulCSS = {position: 'relative', left: 0, width: (this.items.length * 100) + '%'};
-
-			if (css3) {
-				elCSS[css3.accel] = 'translateZ(0)';
-				ulCSS[css3.accel] = 'translateZ(0)';
-			}
+			var opt = _.opts,
+				items = _.items,
+				itemsL = items.length,
+				el = _.el,
+				ul = _.ul;
 
 			//  Set the main element
-			this.el.css(elCSS);
+			el.css({width: _.max[0], height: items.first().outerHeight(), overflow: 'hidden'});
 
 			//  Set the relative widths
-			this.ul.css(ulCSS);
-			this.items.css('width', (100 / this.items.length) + '%');
+			ul.css({position: 'relative', left: 0, width: (itemsL * 100) + '%'});
+			items.css('width', (100 / itemsL) + '%');
 
-			if(this.opts.delay !== f) {
-				this.start();
-				this.el.hover(this.stop, this.start);
-			}
+			if (opt.delay !== f) {
+				_.start(f);
+				opt.pause && el.hover(_.stop, _.start);
+			};
 
 			//  Custom keyboard support
-			this.opts.keys && $(document).keydown(this.keys);
+			opt.keys && $(doc).keydown(_.keys);
 
 			//  Dot pagination
-			this.opts.dots && this.dots();
+			opt.dots && _.nav('dot');
+
+			//  Arrows support
+			opt.arrows && _.nav('arrow');
 
 			//  Little patch for fluid-width sliders. Screw those guys.
-			if(this.opts.fluid) {
-				var resize = function() {
-					_.el.css('width', Math.min(Math.round((_.el.outerWidth() / _.el.parent().outerWidth()) * 100), 100) + '%');
-				};
+			if (opt.fluid) {
+				var timer, resize, styl;
 
-				resize();
+				//  Throttle, IE patch
+				(resize = function() {
+					if (timer) clearTimeout(timer);
+
+					timer = setTimeout(function() {
+						styl = {height: items.eq(_.current).outerHeight()};
+
+						ul.css(styl);
+						styl['width'] = Math.min(Math.round((el.outerWidth() / el.parent().outerWidth()) * 100), 100) + '%';
+						el.css(styl);
+					}, 50);
+				})();
+
 				$(window).resize(resize);
-			}
-
-			if(this.opts.arrows) {
-				this.el.parent().append('<p class="arrows"><span class="prev">←</span><span class="next">→</span></p>').find('.arrows span').click(function() {
-						$.isFunction(_[this.className]) && _[this.className]();
-					});
 			};
 
 			//  Swipe support
-			if($.event.swipe) {
-				this.el.on('swipeleft', _.prev).on('swiperight', _.next);
-			}
+			if ($.event.swipe) el.on('swipeleft', _.prev).on('swiperight', _.next);
 		};
 
 		//  Move Unslider to a slide index
-		this.move = function(index, cb) {
-			//  If it's out of bounds, go to the first slide
-			if (!this.items.eq(index).length) index = 0;
-			if (index < 0) index = (this.items.length - 1);
+		this.move = function(index) {
+			var opt = _.opts,
+				items = _.items,
+				target = items.eq(index),
+				el = _.el,
+				ul = _.ul;
 
-			var target = this.items.eq(index),
+			//  If it's out of bounds, go to the first slide
+			if (!target.length) index = 0;
+			if (index < 0) index = (items.length - 1);
+			_.before(opt.before, index, 'active');
+
+			var speed = opt.speed | 0,
+				tail = css3 ? speed + 'ms ease-in-out' : {duration: speed, queue: f},
 				animH = target.outerHeight() + 'px',
 				animL = '-' + index + '00%',
-				anim = {height: animH},
-				speed = cb ? 5 : this.opts.speed,
-				speedT = speed + 'ms ease-in-out',
-				styl = {el: this.el[0].style, ul: this.ul[0].style};
+				anim = css3 ? 'height ' + tail : {height: animH},
+				styl = {el: el[0].style, ul: ul[0].style};
 
 			if (css3) {
-				var anim = 'height ' + speedT;
-
-				_.moveBefore(index);
-				styl.el[css3.name] = anim;
+				styl.el[css3[0]] = anim;
 				styl.el['height'] = animH;
-				styl.ul[css3.name] = anim + ', left ' + speedT;
+				styl.ul[css3[0]] = anim + ', left ' + tail;
+				styl.ul['height'] = animH;
 				styl.ul['left'] = animL;
 
-				this.ul.bind(css3.callback, function() {
-					$(this).unbind(css3.callback);
-					_.moveAfter(index);
+				ul.bind(css3[1], function() {
+					$(this).unbind(css3[1]);
+					_.after();
 				});
 			} else {
-				if (!this.ul.is(':animated')) {
-					_.moveBefore(index);
+				el.animate(anim, tail);
 
-					this.el.animate(anim, speed);
-					this.ul.animate($.extend({left: animL}, anim), speed, function() {
-						_.moveAfter(index);
-					});
-				}
-			}
+				anim['left'] = animL;
+				tail['complete'] = _.after;
+				ul.animate(anim, tail);
+			};
 		};
 
-		this.moveBefore = function(index) {
-			_.el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
-		};
-
-		this.moveAfter = function(index) {
+		//  Before/after callbacks
+		this.before = function(before, index, name) {
+			$.isFunction(before) && before(_.el);
 			_.current = index;
-			$.isFunction(_.opts.complete) && !cb && _.opts.complete(_.el);
+			_.el.find('.dot:eq(' + index + ')').addClass(name).siblings().removeClass(name);
+		};
+		this.after = function() {
+			var after = _.opts.after;
+			$.isFunction(after) && after(_.el);
 		};
 
 		//  Autoplay functionality
-		this.start = function() {
+		this.start = function(hover) {
+			hover !== f && _.stop();
 			_.interval = setInterval(function() {
 				_.move(_.current + 1);
-			}, _.opts.delay);
+			}, _.opts.delay | 0);
 		};
 
 		//  Stop autoplay
@@ -193,33 +198,37 @@
 		//  Keypresses
 		this.keys = function(e) {
 			var key = e.which;
-			var map = {
-				//  Prev/next
-				37: _.prev,
-				39: _.next,
 
-				//  Esc
-				27: _.stop
-			};
-
-			if($.isFunction(map[key])) {
-				map[key]();
-			}
+			if (key == 37)
+				_.prev(); // Left
+			else if (key == 39)
+				_.next(); // Right
+			else if (key == 27)
+				_.stop(); // Esc
 		};
 
-		//  Arrow navigation
-		this.next = function() { return _.stop().move(_.current + 1) };
-		this.prev = function() { return _.stop().move(_.current - 1) };
-
-		this.dots = function() {
-			//  Create the HTML
-			var html = '<ol class="dots">';
-				$.each(this.items, function(index) { html += '<li class="dot' + (index < 1 ? ' active' : '') + '">' + (index + 1) + '</li>'; });
+		//  Navigation
+		this.next = function() {
+			return _.stop().move(_.current + 1)
+		};
+		this.prev = function() {
+			return _.stop().move(_.current - 1)
+		};
+		this.nav = function(name, html) {
+			if (name == 'dot') {
+				html = '<ol class="dots">';
+				$.each(this.items, function(index) {
+					html += '<li class="' + (index < 1 ? name + ' active' : name) + '">' + (index + 1) + '</li>';
+				});
 				html += '</ol>';
+			} else {
+				html = '<div class="';
+				html = html + name + 's">' + html + name + ' prev">←</div>' + html + name + ' next">→</div></div>';
+			};
 
-			//  Add it to the Unslider
-			this.el.addClass('has-dots').append(html).find('.dot').click(function() {
-				_.stop().move($(this).index());
+			this.el.addClass('has-' + name + 's').append(html).find('.' + name).click(function() {
+				var me = $(this);
+				me.hasClass('dot') ? _.stop().move(me.index()) : me.hasClass('prev') ? _.prev() : _.next();
 			});
 		};
 	};
@@ -231,8 +240,8 @@
 		//  Enable multiple-slider support
 		return this.each(function(index) {
 			//  Cache a copy of $(this), so it
-			var me = $(this);
-			var instance = (new Unslider).init(me, o);
+			var me = $(this),
+				instance = (new Unslider).init(me, o);
 
 			//  Invoke an Unslider instance
 			me.data('unslider' + (len > 1 ? '-' + (index + 1) : ''), instance);

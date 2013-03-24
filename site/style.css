@@ -151,6 +151,18 @@ h1, h2, h3, h4, b {
 				opacity: 1;
 			}
 
+	.banner .arrows {
+		position: absolute;
+		bottom: 20px;
+		right: 20px;
+		color: #fff;
+	}
+		.banner .arrow {
+			display: inline;
+			padding-left: 10px;
+			cursor: pointer;
+		}
+
 .features {
 	overflow: hidden;
 	padding: 50px 0;
