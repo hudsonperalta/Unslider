@@ -16,7 +16,7 @@
 			_dot = 'dot';
 
 		//  Current inded
-		this.cur = 0;
+		this.i = 0;
 
 		//  Set some options
 		this.o = {
@@ -111,7 +111,7 @@
 					this.rs && clearTimeout(this.rs);
 
 					this.rs = setTimeout($.proxy(function() {
-						var styl = {height: this.li.eq(this.cur).outerHeight()},
+						var styl = {height: this.li.eq(this.i).outerHeight()},
 							width = this.el.outerWidth();
 
 						this.max[0] = width;
@@ -128,7 +128,7 @@
 					var type = e.type,
 						x = e.distX,
 						y = e.distY,
-						index = this.cur,
+						index = this.i,
 						width = this.max[0],
 						left = -index * 100,
 						path = 100 * x / width,
@@ -184,7 +184,7 @@
 		//  Move Unslider to a slide index
 		this.to = function(index) {
 			var o = this.o,
-				cur = this.cur,
+				cur = this.i,
 				drag = this.drag,
 				el = this.el,
 				ul = this.ul,
@@ -199,7 +199,7 @@
 			if (index < 0) index = drag ? cur : li.length - 1;
 			if (index == cur) target = li.eq(cur);
 
-			this.cur = index;
+			this.i = index;
 			el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
 			this.before(o.before);
 
@@ -245,7 +245,7 @@
 		this.play = function() {
 			if (!this.drag) {
 				this.timer = setInterval($.proxy(function() {
-					this.to(this.cur + 1);
+					this.to(this.i + 1);
 				}, this), this.o.delay | 0);
 			}
 		};
@@ -258,11 +258,11 @@
 
 		//  Navigation
 		this.next = function() {
-			return this.stop().to(this.cur + 1);
+			return this.stop().to(this.i + 1);
 		};
 
 		this.prev = function() {
-			return this.stop().to(this.cur - 1);
+			return this.stop().to(this.i - 1);
 		};
 
 		this.nav = function(name, html) {
