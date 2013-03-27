@@ -1,5 +1,5 @@
 /**
- *   Unslider v0.2 by @idiot
+ *   Unslider by @idiot and @damirfoy
  */
 
 (function($, f, doc, _transitionend, _TransitionEnd) {
@@ -18,28 +18,26 @@
 		//  Clone attack
 		var _ = this;
 
-		//  Current inded
-		_.i = 0;
-
 		//  Set some options
 		_.o = {
-			speed: 500,  // animation speed, false for no transition (integer)
-			delay: 3000, // delay between slides, false for no autoplay (integer or boolean)
-			init: 0,     // init delay, false for no delay (integer or boolean)
-			pause: !f,   // pause on hover (boolean)
-			loop: !f,    // infinitely looping (boolean)
-			keys: f,     // keyboard shortcuts (boolean)
-			dots: f,     // display ••••o• pagination (boolean)
-			arrows: f,   // display prev/next arrows (boolean)
-			prev: '←',   // text or html inside prev button (string)
-			next: '→',   // same as for prev option
-			fluid: f,    // is it a percentage width? (boolean)
-			touch: _drag // or 'swipe', false to disable (string or boolean)
+			speed: 500,   // animation speed, false for no transition (integer)
+			delay: 3000,  // delay between slides, false for no autoplay (integer or boolean)
+			// init: 0,   // init delay, false for no delay (integer or boolean)
+			pause: !f,    // pause on hover (boolean)
+			loop: !f,     // infinitely looping (boolean)
+			// from: 1,   // number of slide to start from
+			// use: f,    // thumbs list selector
+			// keys: f,   // keyboard shortcuts (boolean)
+			// dots: f,   // display ••••o• pagination (boolean)
+			// arrows: f, // display prev/next arrows (boolean)
+			prev: '←',    // text or html inside prev button (string)
+			next: '→',    // same as for prev option
+			// fluid: f,  // is it a percentage width? (boolean)
+			touch: _drag  // or 'swipe', false to disable (string or boolean)
 		};
 
 		//  Detect CSS3 support
-		var css3,
-			props = {OTransition: 'o' + _TransitionEnd + ' o' + _transitionend, msTransition: _transitionend, MozTransition: _transitionend, WebkitTransition: 'webkit' + _TransitionEnd, transition: _transitionend};
+		var css3, props = {OTransition: 'o' + _TransitionEnd + ' o' + _transitionend, msTransition: _transitionend, MozTransition: _transitionend, WebkitTransition: 'webkit' + _TransitionEnd, transition: _transitionend};
 
 		for (prop in props)
 			if (typeof doc.documentElement.style[prop] == 'string') css3 = {n: prop, c: props[prop]};
@@ -61,22 +59,54 @@
 			//  Check whether we're passing any options in to Unslider
 			_.o = $.extend(_.o, o);
 
-			//  Cache vars
+			//  Cached vars
 			var o = _.o,
+				touch = o.touch,
 				ul = _.ul,
 				li = _.li,
-				t = o.touch,
-				len = li.length;
+				len = li.length,
+				from = o.from | 0,
+				use;
+
+			//  Convert from option to index
+			if (from > len || from == 0) from = 0; else --from;
+
+			//  Current indeed
+			_.i = from;
 
 			//  Set the main element
 			el.css({width: _.max[0], height: li.first().outerHeight(), overflow: 'hidden'});
 
 			//  Set the relative widths
-			ul.css({position: 'relative', left: 0, width: (len * 100) + '%'});
+			ul.css({position: 'relative', left: -(from * 100) + '%', width: (len * 100) + '%'});
 			li.css({'float': 'left', width: (100 / len) + '%'});
 
+			//  Thumbs?
+			if (o.use) {
+				use = $(o.use).find('>li');
+
+				if (use.length) {
+					_.use = use;
+
+					use.click(function() {
+						_.stop().to($(this).index());
+					}).eq(_.i).addClass('active');
+				};
+			};
+
 			//  Autoslide
-			setTimeout(_.auto, o.init | 0);
+			setTimeout(function() {
+				if (o.delay | 0) {
+					_.play();
+
+					if (o.pause) {
+						el.on('mouseover ' + _mouseout, function(e) {
+							_.stop();
+							e.type == _mouseout && _.play();
+						});
+					};
+				};
+			}, o.init | 0);
 
 			//  Keypresses
 			if (o.keys) {
@@ -116,18 +146,17 @@
 			};
 
 			//  Touch support
-			if (t) {
+			if (touch) {
 				el.on(_movestart + ' move ' + _moveend + ' ' + _swipeleft + ' swiperight', function(e) {
 					var type = e.type,
 						x = e.distX,
 						y = e.distY,
 						index = _.i,
-						width = _.max[0],
 						left = -index * 100,
-						path = 100 * x / width,
+						path = 100 * x / _.max[0],
 						styl = ul[0].style;
 
-					if (t == _drag && _special[_move]) {
+					if (touch == _drag && _special[_move]) {
 						//  Drag support
 						if (type == _movestart) {
 							if (x > y && x < -y || x < y && x > -y) {
@@ -152,7 +181,7 @@
 							_.stop();
 							_.drag = f;
 						};
-					} else if (t == _swipe && _special[_swipe]) {
+					} else if (touch == _swipe && _special[_swipe]) {
 						//  Swipe support
 						type == _swipeleft ? _.prev() : _.next();
 					};
@@ -162,46 +191,36 @@
 			return _;
 		};
 
-		//  Work out what methods need calling
-
-		//  Autoslide it
-		_.auto = function() {
-			if (_.o.delay | 0) {
-				_.play();
-
-				if (_.o.pause) {
-					_.el.on('mouseover ' + _mouseout, function(e) {
-						_.stop();
-						e.type == _mouseout && _.play();
-					});
-				};
-			};
-		};
-
 		//  Move Unslider to a slide index
 		_.to = function(index) {
-			var cur = _.i,
+			var o = _.o,
+				el = _.el,
+				ul = _.ul,
+				li = _.li,
+				current = _.i,
 				drag = _.drag,
-				target = _.li.eq(index);
+				target = li.eq(index);
 
 			//  Slide?
-			if (index == cur && !drag || (!target.length || index < 0) && _.o.loop == f) return;
+			if (index == current && !drag || (!target.length || index < 0) && o.loop == f) return;
 
 			//  Check if it's out of bounds
-			if (!target.length) index = drag ? cur : 0;
-			if (index < 0) index = drag ? cur : _.li.length - 1;
-			if (index == cur) target = _.li.eq(cur);
+			if (!target.length) index = drag ? current : 0;
+			if (index < 0) index = drag ? current : li.length - 1;
+			if (index == current) target = li.eq(current);
 
 			_.i = index;
-			_.el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
-			_.before(_.o.before);
+			_.before(o.before);
 
-			var speed = _.o.speed | 0,
+			toggle(el.find('.dot:eq(' + index + ')'));
+			if (_.use) toggle(_.use.eq(index));
+
+			var speed = o.speed | 0,
 				tail = css3 ? speed + 'ms ease-in-out' : {duration: speed, queue: f},
 				animH = target.outerHeight() + 'px',
 				animL = '-' + index + '00%',
 				anim = css3 ? 'height ' + tail : {height: animH},
-				styl = {el: _.el[0].style, ul: _.ul[0].style};
+				styl = {el: el[0].style, ul: ul[0].style};
 
 			if (css3) {
 				//  CSS3 transition
@@ -211,17 +230,17 @@
 				styl.ul['height'] = animH;
 				styl.ul['left'] = animL;
 
-				_.ul.on(css3.c, function() {
-					_.ul.off(css3.c);
+				ul.on(css3.c, function() {
+					ul.off(css3.c);
 					_.after();
 				});
 			} else {
 				//  jQuery animation
-				_.el.animate(anim, tail);
+				el.animate(anim, tail);
 
 				anim['left'] = animL;
 				tail['complete'] = _.after;
-				_.ul.animate(anim, tail);
+				ul.animate(anim, tail);
 			};
 		};
 
@@ -237,15 +256,15 @@
 		//  Autoplay functionality
 		_.play = function() {
 			if (!_.drag) {
-				_.timer = setInterval(function() {
+				_.t = setInterval(function() {
 					_.to(_.i + 1);
 				}, _.o.delay | 0);
-			}
+			};
 		};
 
 		//  Stop autoplay
 		_.stop = function() {
-			_.timer = clearInterval(_.timer);
+			_.t = clearInterval(_.t);
 			return _;
 		};
 
@@ -262,7 +281,7 @@
 			if (name == _dot) {
 				html = '<ol class="dots">';
 					$.each(this.li, function(index) {
-						html += '<li class="' + (index < 1 ? name + ' active' : name) + '">' + ++index + '</li>';
+						html += '<li class="' + (index == _.i ? name + ' active' : name) + '">' + ++index + '</li>';
 					});
 				html += '</ol>';
 			} else {
@@ -274,6 +293,10 @@
 				var me = $(this);
 				me.hasClass(_dot) ? _.stop().to(me.index()) : me.hasClass('prev') ? _.prev() : _.next();
 			});
+		};
+
+		function toggle(element) {
+			element.addClass('active').siblings().removeClass('active');
 		};
 	};
 
