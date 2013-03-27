@@ -202,7 +202,7 @@
 				drag = _.drag,
 				target = li.eq(index);
 
-			//  Slide?
+			//  To slide or not to slide
 			if (index == current && !drag || (!target.length || index < 0) && o.loop == f) return;
 
 			//  Check if it's out of bounds
@@ -259,7 +259,7 @@
 			return _;
 		};
 
-		//  Navigation
+		//  Move to previous/next slide
 		_.next = function() {
 			return _.stop().to(_.i + 1);
 		};
@@ -268,6 +268,7 @@
 			return _.stop().to(_.i - 1);
 		};
 
+		//  Dots and arrows
 		function nav(name, html) {
 			if (name == _dot) {
 				html = '<ol class="dots">';
@@ -286,10 +287,12 @@
 			});
 		};
 
+		//  Toggle active class on dots and thumbs
 		function toggle(element) {
 			element.addClass('active').siblings().removeClass('active');
 		};
 
+		//  Callback fired after animation is finished
 		function after() {
 			$.isFunction(_.o.after) && _.o.after(_.el);
 		};
