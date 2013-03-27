@@ -123,10 +123,10 @@
 			};
 
 			//  Dot pagination
-			o.dots && _.nav(_dot);
+			o.dots && nav(_dot);
 
 			//  Arrows support
-			o.arrows && _.nav('arrow');
+			o.arrows && nav('arrow');
 
 			//  Patch for fluid-width sliders. Screw those guys.
 			if (o.fluid) {
@@ -277,10 +277,10 @@
 			return _.stop().to(_.i - 1);
 		};
 
-		_.nav = function(name, html) {
+		function nav(name, html) {
 			if (name == _dot) {
 				html = '<ol class="dots">';
-					$.each(this.li, function(index) {
+					$.each(_.li, function(index) {
 						html += '<li class="' + (index == _.i ? name + ' active' : name) + '">' + ++index + '</li>';
 					});
 				html += '</ol>';
