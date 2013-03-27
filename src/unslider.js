@@ -26,13 +26,15 @@
 			pause: !f,    // pause on hover (boolean)
 			loop: !f,     // infinitely looping (boolean)
 			// from: 1,   // number of slide to start from
-			// use: f,    // thumbs list selector
+			// use: f,    // thumbs list selector (string or boolean)
 			// keys: f,   // keyboard shortcuts (boolean)
 			// dots: f,   // display ••••o• pagination (boolean)
 			// arrows: f, // display prev/next arrows (boolean)
 			prev: '←',    // text or html inside prev button (string)
 			next: '→',    // same as for prev option
 			// fluid: f,  // is it a percentage width? (boolean)
+			// before: f, // invoke before animation starts (function with argument)
+			// after: f,  // invoke when animation is finished (function with argument)
 			touch: _drag  // or 'swipe', false to disable (string or boolean)
 		};
 
