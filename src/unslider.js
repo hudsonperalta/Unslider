@@ -37,7 +37,8 @@
 		};
 
 		//  Detect CSS3 support
-		var css3, props = {OTransition: 'o' + _TransitionEnd + ' o' + _transitionend, msTransition: _transitionend, MozTransition: _transitionend, WebkitTransition: 'webkit' + _TransitionEnd, transition: _transitionend};
+		var css3,
+			props = {OTransition: 'o' + _TransitionEnd + ' o' + _transitionend, msTransition: _transitionend, MozTransition: _transitionend, WebkitTransition: 'webkit' + _TransitionEnd, transition: _transitionend};
 
 		for (prop in props)
 			if (typeof doc.documentElement.style[prop] == 'string') css3 = {n: prop, c: props[prop]};
@@ -208,10 +209,9 @@
 			if (!target.length) index = drag ? current : 0;
 			if (index < 0) index = drag ? current : li.length - 1;
 			if (index == current) target = li.eq(current);
-
 			_.i = index;
-			_.before(o.before);
 
+			$.isFunction(o.before) && o.before(el);
 			toggle(el.find('.dot:eq(' + index + ')'));
 			if (_.use) toggle(_.use.eq(index));
 
@@ -232,25 +232,16 @@
 
 				ul.on(css3.c, function() {
 					ul.off(css3.c);
-					_.after();
+					after();
 				});
 			} else {
 				//  jQuery animation
 				el.animate(anim, tail);
 
 				anim['left'] = animL;
-				tail['complete'] = _.after;
+				tail['complete'] = after;
 				ul.animate(anim, tail);
 			};
-		};
-
-		//  Before/after callbacks
-		_.before = function(before) {
-			$.isFunction(before) && before(_.el);
-		};
-
-		_.after = function() {
-			$.isFunction(_.o.after) && _.o.after(_.el);
 		};
 
 		//  Autoplay functionality
@@ -297,6 +288,10 @@
 
 		function toggle(element) {
 			element.addClass('active').siblings().removeClass('active');
+		};
+
+		function after() {
+			$.isFunction(_.o.after) && _.o.after(_.el);
 		};
 	};
 
