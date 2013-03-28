@@ -26,7 +26,7 @@
 			pause: !f,    // pause on hover (boolean)
 			loop: !f,     // infinitely looping (boolean)
 			// from: 1,   // number of slide to start from
-			// use: f,    // thumbs list selector (string or boolean)
+			// use: f,    // helper list selector, can be used for thumbs (string or boolean)
 			// keys: f,   // keyboard shortcuts (boolean)
 			// dots: f,   // display ••••o• pagination (boolean)
 			// arrows: f, // display prev/next arrows (boolean)
@@ -150,8 +150,8 @@
 
 			//  Touch support
 			if (touch) {
-				el.on(_movestart + ' move ' + _moveend + ' ' + _swipeleft + ' swiperight', function(e) {
-					var type = e.type,
+				el.on(_movestart + ' move ' + _moveend + ' ' + _swipeleft + ' swiperight swipeLeft swipeRight', function(e) {
+					var type = e.type.toLowerCase(),
 						x = e.distX,
 						y = e.distY,
 						index = _.i,
@@ -184,7 +184,7 @@
 							_.stop();
 							_.drag = f;
 						};
-					} else if (touch == _swipe && _special[_swipe]) {
+					} else if (touch == _swipe && (_special[_swipe] || $.Event(_swipe))) {
 						//  Swipe support
 						type == _swipeleft ? _.prev() : _.next();
 					};
@@ -270,7 +270,7 @@
 			return _.stop().to(_.i - 1);
 		};
 
-		//  Dots and arrows
+		//  Create dots and arrows
 		function nav(name, html) {
 			if (name == _dot) {
 				html = '<ol class="dots">';
