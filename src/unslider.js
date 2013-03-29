@@ -142,7 +142,7 @@
 
 						_.max[0] = width;
 						ul.css(styl);
-						styl['width'] = Math.min(Math.round((width / el.parent().outerWidth()) * 100), 100) + '%';
+						styl['width'] = Math.min(Math.round((width / el.parent().width()) * 100), 100) + '%';
 						el.css(styl);
 					}, 50);
 				}).resize();
