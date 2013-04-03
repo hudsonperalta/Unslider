@@ -108,8 +108,8 @@
 
 			//  Swipe support
 			if ($.event.special['swipe'] || $.Event('swipe')) {
-				el.on('swipeLeft swipeRight', function(e) {
-					e.type == 'swipeLeft' ? _.prev() : _.next();
+				el.on('swipeleft swiperight swipeLeft swipeRight', function(e) {
+					e.type.toLowerCase() == 'swipeleft' ? _.prev() : _.next();
 				});
 			};
 
