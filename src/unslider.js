@@ -2,26 +2,48 @@
  *   Unslider by @idiot and @damirfoy
  */
 
-(function($, f) {
+(function($, f, doc, _transitionend, _TransitionEnd) {
 	var Unslider = function() {
-		//  Object clone
+		//  Cached strings
+		var _special = $.event.special,
+			_move = 'move',
+			_movestart = _move + 'start',
+			_moveend = _move + 'end',
+			_swipe = 'swipe',
+			_swipeleft = _swipe + 'left',
+			_drag = 'drag',
+			_mouseout = 'mouseout',
+			_dot = 'dot';
+
+		//  Clone attack
 		var _ = this;
 
 		//  Set some options
 		_.o = {
-			speed: 500,   // animation speed, false for no transition (integer or boolean)
+			speed: 500,   // animation speed, false for no transition (integer)
 			delay: 3000,  // delay between slides, false for no autoplay (integer or boolean)
-			init: 0,      // init delay, false for no delay (integer or boolean)
+			// init: 0,   // init delay, false for no delay (integer or boolean)
 			pause: !f,    // pause on hover (boolean)
 			loop: !f,     // infinitely looping (boolean)
-			keys: f,      // keyboard shortcuts (boolean)
-			dots: f,      // display ••••o• pagination (boolean)
-			arrows: f,    // display prev/next arrows (boolean)
+			// from: 1,   // number of slide to start from
+			// use: f,    // helper list selector, can be used for thumbs (string or boolean)
+			// keys: f,   // keyboard shortcuts (boolean)
+			// dots: f,   // display ••••o• pagination (boolean)
+			// arrows: f, // display prev/next arrows (boolean)
 			prev: '←',    // text or html inside prev button (string)
 			next: '→',    // same as for prev option
-			fluid: f,     // is it a percentage width? (boolean)
-			complete: f   // invoke after animation (function with argument)
+			// fluid: f,  // is it a percentage width? (boolean)
+			// before: f, // invoke before animation starts (function with argument)
+			// after: f,  // invoke when animation is finished (function with argument)
+			touch: _drag  // or 'swipe', false to disable (string or boolean)
 		};
+
+		//  Detect CSS3 support
+		var css3,
+			props = {OTransition: 'o' + _TransitionEnd + ' o' + _transitionend, msTransition: _transitionend, MozTransition: _transitionend, WebkitTransition: 'webkit' + _TransitionEnd, transition: _transitionend};
+
+		for (prop in props)
+			if (typeof doc.documentElement.style[prop] == 'string') css3 = {n: prop, c: props[prop]};
 
 		_.init = function(el, o) {
 			_.el = el;
@@ -42,19 +64,38 @@
 
 			//  Cached vars
 			var o = _.o,
+				touch = o.touch,
 				ul = _.ul,
 				li = _.li,
-				len = li.length;
+				len = li.length,
+				from = o.from | 0,
+				use;
+
+			//  Convert from option to index
+			if (from > len || from == 0) from = 0; else --from;
 
 			//  Current indeed
-			_.i = 0;
+			_.i = from;
 
 			//  Set the main element
 			el.css({width: _.max[0], height: li.first().outerHeight(), overflow: 'hidden'});
 
 			//  Set the relative widths
-			ul.css({position: 'relative', left: 0, width: (len * 100) + '%'});
+			ul.css({position: 'relative', left: -(from * 100) + '%', width: (len * 100) + '%'});
 			li.css({'float': 'left', width: (100 / len) + '%'});
+
+			//  Thumbs?
+			if (o.use) {
+				use = $(o.use).find('>li');
+
+				if (use.length) {
+					_.use = use;
+
+					use.click(function() {
+						_.stop().to($(this).index());
+					}).eq(_.i).addClass('active');
+				};
+			};
 
 			//  Autoslide
 			setTimeout(function() {
@@ -62,9 +103,9 @@
 					_.play();
 
 					if (o.pause) {
-						el.on('mouseover mouseout', function(e) {
+						el.on('mouseover ' + _mouseout, function(e) {
 							_.stop();
-							e.type == 'mouseout' && _.play();
+							e.type == _mouseout && _.play();
 						});
 					};
 				};
@@ -72,7 +113,7 @@
 
 			//  Keypresses
 			if (o.keys) {
-				$(document).keydown(function(e) {
+				$(doc).keydown(function(e) {
 					var key = e.which;
 
 					if (key == 37)
@@ -85,7 +126,7 @@
 			};
 
 			//  Dot pagination
-			o.dots && nav('dot');
+			o.dots && nav(_dot);
 
 			//  Arrows support
 			o.arrows && nav('arrow');
@@ -99,6 +140,7 @@
 						var styl = {height: li.eq(_.i).outerHeight()},
 							width = el.outerWidth();
 
+						_.max[0] = width;
 						ul.css(styl);
 						styl['width'] = Math.min(Math.round((width / el.parent().width()) * 100), 100) + '%';
 						el.css(styl);
@@ -106,64 +148,111 @@
 				}).resize();
 			};
 
-			//  Swipe support
-			if ($.event.special['swipe'] || $.Event('swipe')) {
-				el.on('swipeleft swiperight swipeLeft swipeRight', function(e) {
-					e.type.toLowerCase() == 'swipeleft' ? _.prev() : _.next();
-				});
-			};
+			//  Touch support
+			if (touch) {
+				el.on(_movestart + ' move ' + _moveend + ' ' + _swipeleft + ' swiperight swipeLeft swipeRight', function(e) {
+					var type = e.type.toLowerCase(),
+						x = e.distX,
+						y = e.distY,
+						index = _.i,
+						left = -index * 100,
+						path = 100 * x / _.max[0],
+						styl = ul[0].style;
+
+					if (touch == _drag && _special[_move]) {
+						//  Drag support
+						if (type == _movestart) {
+							if (x > y && x < -y || x < y && x > -y) {
+								e.preventDefault();
+								return;
+							} else {
+								if (css3) styl[css3.n] = 'left 0ms ease';
+								_.drag = !f;
+							};
+						} else if (type == _move) {
+							styl['left'] = left + path + '%';
+						} else if (type == _moveend) {
+							path = path | 0;
+
+							if (path < -10)
+								_.to(++index);
+							else if (path > 10)
+								_.to(--index);
+							else
+								_.to(index);
+
+							_.stop();
+							_.drag = f;
+						};
+					} else if (touch == _swipe && (_special[_swipe] || $.Event(_swipe))) {
+						//  Swipe support
+						type == _swipeleft ? _.prev() : _.next();
+					};
 
 			return _;
 		};
 
 		//  Move Unslider to a slide index
-		_.to = function(index, callback) {
+		_.to = function(index) {
 			var o = _.o,
-				el = _.el,
+		_.to = function(index) {
 				ul = _.ul,
 				li = _.li,
 				current = _.i,
+				drag = _.drag,
 				target = li.eq(index);
-
+				drag = _.drag,
 			//  To slide or not to slide
-			if ((!target.length || index < 0) && o.loop == f) return;
+			if (index == current && !drag || (!target.length || index < 0) && o.loop == f) return;
 
-			//  Check if it's out of bounds
-			if (!target.length) index = 0;
-			if (index < 0) index = li.length - 1;
-			target = li.eq(index);
+			if (index == current && !drag || (!target.length || index < 0) && o.loop == f) return;
+			if (!target.length) index = drag ? current : 0;
+			if (index < 0) index = drag ? current : li.length - 1;
+			if (!target.length) index = drag ? current : 0;
+			if (index < 0) index = drag ? current : li.length - 1;
+			if (index == current) target = li.eq(current);
+			_.i = index;
 
-			var speed = callback ? 5 : o.speed | 0,
-				obj = {height: target.outerHeight()};
+			$.isFunction(o.before) && o.before(el);
+			toggle(el.find('.dot:eq(' + index + ')'));
+			if (_.use) toggle(_.use.eq(index));
 
-			if (!ul.is(':animated')) {
-				//  Handle those pesky dots
-				el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
+			var speed = o.speed | 0,
+				tail = css3 ? speed + 'ms ease-in-out' : {duration: speed, queue: f},
+				animH = target.outerHeight() + 'px',
+				animL = '-' + index + '00%',
+				anim = css3 ? 'height ' + tail : {height: animH},
+				styl = {el: el[0].style, ul: ul[0].style};
 
-				el.animate(obj, speed) && ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, function(data) {
-					_.i = index;
+			if (css3) {
+				//  CSS3 transition
+				styl.el[css3.n] = anim;
+				styl.el['height'] = animH;
+				styl.ul[css3.n] = anim + ', left ' + tail;
+				styl.ul['height'] = animH;
+				styl.ul['left'] = animL;
 
-					$.isFunction(o.complete) && !callback && o.complete(el);
-				});
-			};
-		};
-
+				ul.on(css3.c, function() {
+					ul.off(css3.c);
+					after();
 		//  Autoplay functionality
-		_.play = function() {
-			_.t = setInterval(function() {
-				_.to(_.i + 1);
-			}, _.o.delay | 0);
-		};
+			} else {
+				//  jQuery animation
+				el.animate(anim, tail);
+
+				anim['left'] = animL;
+				tail['complete'] = after;
+				ul.animate(anim, tail);
 
 		//  Stop autoplay
 		_.stop = function() {
 			_.t = clearInterval(_.t);
 			return _;
-		};
-
-		//  Move to previous/next slide
-		_.next = function() {
-			return _.stop().to(_.i + 1);
+			if (!_.drag) {
+				_.t = setInterval(function() {
+					_.to(_.i + 1);
+				}, _.o.delay | 0);
+			};
 		};
 
 		_.prev = function() {
@@ -172,7 +261,7 @@
 
 		//  Create dots and arrows
 		function nav(name, html) {
-			if (name == 'dot') {
+			if (name == _dot) {
 				html = '<ol class="dots">';
 					$.each(_.li, function(index) {
 						html += '<li class="' + (index == _.i ? name + ' active' : name) + '">' + ++index + '</li>';
@@ -183,21 +272,31 @@
 				html = html + name + 's">' + html + name + ' prev">' + _.o.prev + '</div>' + html + name + ' next">' + _.o.next + '</div></div>';
 			};
 
-			_.el.addClass('has-' + name + 's').append(html).find('.' + name).click(function() {
+			if (name == _dot) {
 				var me = $(this);
-				me.hasClass('dot') ? _.stop().to(me.index()) : me.hasClass('prev') ? _.prev() : _.next();
+				me.hasClass(_dot) ? _.stop().to(me.index()) : me.hasClass('prev') ? _.prev() : _.next();
 			});
 		};
-	};
 
-	//  Create a jQuery plugin
-	$.fn.unslider = function(o) {
-		var len = this.length;
+		//  Toggle active class on dots and thumbs
+		function toggle(element) {
+			element.addClass('active').siblings().removeClass('active');
+		};
 
-		//  Enable multiple-slider support
-		return this.each(function(index) {
-			//  Cache a copy of $(this), so it
-			var me = $(this),
+		//  Callback fired after animation is finished
+		function after() {
+				me.hasClass(_dot) ? _.stop().to(me.index()) : me.hasClass('prev') ? _.prev() : _.next();
+		};
+		};
+
+		//  Toggle active class on dots and thumbs
+		function toggle(element) {
+			element.addClass('active').siblings().removeClass('active');
+		};
+
+		//  Callback fired after animation is finished
+		function after() {
+			$.isFunction(_.o.after) && _.o.after(_.el);
 				key = 'unslider' + (len > 1 ? '-' + ++index : ''),
 				instance = (new Unslider).init(me, o);
 
@@ -205,4 +304,5 @@
 			me.data(key, instance).data('key', key);
 		});
 	};
-})(jQuery, false);
+})(jQuery, false, document, 'transitionend', 'TransitionEnd');
+})(jQuery, false, document, 'transitionend', 'TransitionEnd');
