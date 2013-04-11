@@ -20,14 +20,19 @@
 			prev: '←',    // text or html inside prev button (string)
 			next: '→',    // same as for prev option
 			fluid: f,     // is it a percentage width? (boolean)
-			complete: f   // invoke after animation (function with argument)
+			complete: f,  // invoke after animation (function with argument)
+			items: '>ul', // container element
+			item: '>li'   // slidable items
 		};
 
 		_.init = function(el, o) {
+			//  Check whether we're passing any options in to Unslider
+			_.o = $.extend(_.o, o);
+
 			_.el = el;
-			_.ul = el.find('>ul');
+			_.ul = el.find(_.o.items);
 			_.max = [el.outerWidth() | 0, el.outerHeight() | 0];
-			_.li = _.ul.find('>li').each(function(index) {
+			_.li = _.ul.find(_.o.item).each(function(index) {
 				var me = $(this),
 					width = me.outerWidth(),
 					height = me.outerHeight();
@@ -37,8 +42,6 @@
 				if (height > _.max[1]) _.max[1] = height;
 			});
 
-			//  Check whether we're passing any options in to Unslider
-			_.o = $.extend(_.o, o);
 
 			//  Cached vars
 			var o = _.o,
