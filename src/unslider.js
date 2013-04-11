@@ -9,20 +9,20 @@
 
 		//  Set some options
 		_.o = {
-			speed: 500,       // animation speed, false for no transition (integer or boolean)
-			delay: 3000,      // delay between slides, false for no autoplay (integer or boolean)
-			init: 0,          // init delay, false for no delay (integer or boolean)
-			pause: !f,        // pause on hover (boolean)
-			loop: !f,         // infinitely looping (boolean)
-			keys: f,          // keyboard shortcuts (boolean)
-			dots: f,          // display ••••o• pagination (boolean)
-			arrows: f,        // display prev/next arrows (boolean)
-			prev: '←',        // text or html inside prev button (string)
-			next: '→',        // same as for prev option
-			fluid: f,         // is it a percentage width? (boolean)
-			complete: f,      // invoke after animation (function with argument)
-			container: '>ul', // container element
-			items: '>li'      // slidable items
+			speed: 500,   // animation speed, false for no transition (integer or boolean)
+			delay: 3000,  // delay between slides, false for no autoplay (integer or boolean)
+			init: 0,      // init delay, false for no delay (integer or boolean)
+			pause: !f,    // pause on hover (boolean)
+			loop: !f,     // infinitely looping (boolean)
+			keys: f,      // keyboard shortcuts (boolean)
+			dots: f,      // display ••••o• pagination (boolean)
+			arrows: f,    // display prev/next arrows (boolean)
+			prev: '←',    // text or html inside prev button (string)
+			next: '→',    // same as for prev option
+			fluid: f,     // is it a percentage width? (boolean)
+			complete: f,  // invoke after animation (function with argument)
+			items: '>ul', // container element
+			item: '>li'   // slidable items
 		};
 
 		_.init = function(el, o) {
@@ -30,9 +30,9 @@
 			_.o = $.extend(_.o, o);
 
 			_.el = el;
-			_.ul = el.find(_.o.container);
+			_.ul = el.find(_.o.items);
 			_.max = [el.outerWidth() | 0, el.outerHeight() | 0];
-			_.li = _.ul.find(_.o.items).each(function(index) {
+			_.li = _.ul.find(_.o.item).each(function(index) {
 				var me = $(this),
 					width = me.outerWidth(),
 					height = me.outerHeight();
