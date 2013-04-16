@@ -21,8 +21,8 @@
 			next: '→',    // same as for prev option
 			fluid: f,     // is it a percentage width? (boolean)
 			complete: f,  // invoke after animation (function with argument)
-			items: '>ul', // container element
-			item: '>li'   // slidable items
+			items: '>ul', // slides container selector
+			item: '>li'   // slidable items selector
 		};
 
 		_.init = function(el, o) {
