@@ -139,9 +139,9 @@
 			var speed = callback ? 5 : o.speed | 0,
 				obj = {height: target.outerHeight()};
 
-			if (!ul.is(':animated')) {
+			if (!ul.queue('fx').length) {
 				//  Handle those pesky dots
-				el.find('.dot:eq(' + index + ')').addClass('active').siblings().removeClass('active');
+				el.find('.dot').eq(index).addClass('active').siblings().removeClass('active');
 
 				el.animate(obj, speed) && ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, function(data) {
 					_.i = index;
