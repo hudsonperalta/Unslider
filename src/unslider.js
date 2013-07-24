@@ -9,20 +9,21 @@
 
 		//  Set some options
 		_.o = {
-			speed: 500,   // animation speed, false for no transition (integer or boolean)
-			delay: 3000,  // delay between slides, false for no autoplay (integer or boolean)
-			init: 0,      // init delay, false for no delay (integer or boolean)
-			pause: !f,    // pause on hover (boolean)
-			loop: !f,     // infinitely looping (boolean)
-			keys: f,      // keyboard shortcuts (boolean)
-			dots: f,      // display ••••o• pagination (boolean)
-			arrows: f,    // display prev/next arrows (boolean)
-			prev: '←',    // text or html inside prev button (string)
-			next: '→',    // same as for prev option
-			fluid: f,     // is it a percentage width? (boolean)
-			complete: f,  // invoke after animation (function with argument)
-			items: '>ul', // slides container selector
-			item: '>li'   // slidable items selector
+			speed: 500,     // animation speed, false for no transition (integer or boolean)
+			delay: 3000,    // delay between slides, false for no autoplay (integer or boolean)
+			init: 0,        // init delay, false for no delay (integer or boolean)
+			pause: !f,      // pause on hover (boolean)
+			loop: !f,       // infinitely looping (boolean)
+			keys: f,        // keyboard shortcuts (boolean)
+			dots: f,        // display ••••o• pagination (boolean)
+			arrows: f,      // display prev/next arrows (boolean)
+			prev: '←',      // text or html inside prev button (string)
+			next: '→',      // same as for prev option
+			fluid: f,       // is it a percentage width? (boolean)
+			complete: f,    // invoke after animation (function with argument)
+			items: '>ul',   // slides container selector
+			item: '>li',    // slidable items selector
+			easing: 'swing' // easing function to use for animation
 		};
 
 		_.init = function(el, o) {
@@ -137,13 +138,14 @@
 			target = li.eq(index);
 
 			var speed = callback ? 5 : o.speed | 0,
+				easing = o.easing,
 				obj = {height: target.outerHeight()};
 
 			if (!ul.queue('fx').length) {
 				//  Handle those pesky dots
 				el.find('.dot').eq(index).addClass('active').siblings().removeClass('active');
 
-				el.animate(obj, speed) && ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, function(data) {
+				el.animate(obj, speed, easing) && ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, easing, function(data) {
 					_.i = index;
 
 					$.isFunction(o.complete) && !callback && o.complete(el);
