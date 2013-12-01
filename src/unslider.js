@@ -1,5 +1,8 @@
 /**
  *   Unslider by @idiot and @damirfoy
+ *   Contributors:
+ *   - @ShamoX
+ *
  */
 
 (function($, f) {
@@ -217,4 +220,6 @@
 			me.data(key, instance).data('key', key);
 		});
 	};
+
+	Unslider.version = "1.0.0";
 })(jQuery, false);
