@@ -1,5 +1,8 @@
 /**
  *   Unslider by @idiot and @damirfoy
+ *   Contributors:
+ *   - @ShamoX
+ *
  */
 
 (function($, f) {
@@ -20,6 +23,7 @@
 			prev: '←',      // text or html inside prev button (string)
 			next: '→',      // same as for prev option
 			fluid: f,       // is it a percentage width? (boolean)
+			starting: f,    // invoke before animation (function with argument)
 			complete: f,    // invoke after animation (function with argument)
 			items: '>ul',   // slides container selector
 			item: '>li',    // slidable items selector
@@ -133,6 +137,8 @@
 				current = _.i,
 				target = li.eq(index);
 
+			$.isFunction(o.starting) && !callback && o.starting(el, li.eq(current));
+
 			//  To slide or not to slide
 			if ((!target.length || index < 0) && o.loop == f) return;
 
@@ -152,7 +158,7 @@
 				el.animate(obj, speed, easing) && ul.animate($.extend({left: '-' + index + '00%'}, obj), speed, easing, function(data) {
 					_.i = index;
 
-					$.isFunction(o.complete) && !callback && o.complete(el);
+					$.isFunction(o.complete) && !callback && o.complete(el, target);
 				});
 			};
 		};
@@ -214,4 +220,6 @@
 			me.data(key, instance).data('key', key);
 		});
 	};
+
+	Unslider.version = "1.0.0";
 })(jQuery, false);
