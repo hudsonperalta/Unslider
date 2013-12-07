@@ -66,7 +66,7 @@
 			li.css({'float': 'left', width: (_.max[0]) + 'px'});
 
 			//  Autoslide
-            o.autoplay && setTimeout(function() {
+			o.autoplay && setTimeout(function() {
 				if (o.delay | 0) {
 					_.play();
 
