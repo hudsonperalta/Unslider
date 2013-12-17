@@ -27,7 +27,8 @@
 			complete: f,    // invoke after animation (function with argument)
 			items: '>ul',   // slides container selector
 			item: '>li',    // slidable items selector
-			easing: 'swing' // easing function to use for animation
+			easing: 'swing',// easing function to use for animation
+			autoplay: true  // enable autoplay on initialisation
 		};
 
 		_.init = function(el, o) {
@@ -65,7 +66,7 @@
 			li.css({'float': 'left', width: (_.max[0]) + 'px'});
 
 			//  Autoslide
-			setTimeout(function() {
+			o.autoplay && setTimeout(function() {
 				if (o.delay | 0) {
 					_.play();
 
