@@ -4,6 +4,11 @@
   "main": "src/unslider.min.js",
   "license": "MIT",
   "dependencies": {
-        "jquery": "latest"
-  }
+    "jquery": "latest"
+  },
+  "ignore" : [
+    "site/",
+	"readme.md",
+	".gitignore"
+  ]
 }
