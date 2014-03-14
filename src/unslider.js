@@ -63,7 +63,11 @@
 
 			//  Set the relative widths
 			ul.css({position: 'relative', left: 0, width: (len * 100) + '%'});
-			li.css({'float': 'left', width: (_.max[0]) + 'px'});
+			if(o.fluid) {
+				li.css({'float': 'left', width: (100 / len) + '%'});
+			} else {
+				li.css({'float': 'left', width: (_.max[0]) + 'px'});
+			}
 
 			//  Autoslide
 			o.autoplay && setTimeout(function() {
