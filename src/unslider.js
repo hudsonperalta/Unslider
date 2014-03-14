@@ -18,10 +18,10 @@
 			pause: !f,      // pause on hover (boolean)
 			loop: !f,       // infinitely looping (boolean)
 			keys: f,        // keyboard shortcuts (boolean)
-			dots: f,        // display ••••o• pagination (boolean)
+			dots: f,        // display dots pagination (boolean)
 			arrows: f,      // display prev/next arrows (boolean)
-			prev: '←',      // text or html inside prev button (string)
-			next: '→',      // same as for prev option
+			prev: '&larr;', // text or html inside prev button (string)
+			next: '&rarr;', // same as for prev option
 			fluid: f,       // is it a percentage width? (boolean)
 			starting: f,    // invoke before animation (function with argument)
 			complete: f,    // invoke after animation (function with argument)
