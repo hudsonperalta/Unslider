@@ -115,10 +115,27 @@
 				}).resize();
 			};
 
-			//  Swipe support
-			if ($.event.special['swipe'] || $.Event('swipe')) {
-				el.on('swipeleft swiperight swipeLeft swipeRight', function(e) {
-					e.type.toLowerCase() == 'swipeleft' ? _.next() : _.prev();
+			//  Move support
+			if ($.event.special['move'] || $.Event('move')) {
+				el.on('movestart', function(e) {
+					if ((e.distX > e.distY && e.distX < -e.distY) || (e.distX < e.distY && e.distX > -e.distY)) {
+						e.preventDefault();
+					}else{
+						el.data("left", _.ul.offset().left / el.width() * 100);
+					}
+				}).on('move', function(e) {
+					var left = 100 * e.distX / el.width();
+					_.ul.css("left", el.data("left") + left + "%");
+					_.ul.data("left", left);
+				}).on('moveend', function(e) {
+					var left = _.ul.data("left");
+					if (Math.abs(left) > 30){
+						var i = left > 0 ? _.i-1 : _.i+1;
+						if (i < 0 || i >= len) i = _.i;
+						_.to(i);
+					}else{
+						_.to(_.i);
+					}
 				});
 			};
 
