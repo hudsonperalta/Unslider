@@ -127,14 +127,20 @@ h1, h2, h3, h4, b {
 		left: 0;
 		right: 0;
 		bottom: 20px;
+		width: 100%;
 	}
 		.banner .dots li {
 			display: inline-block;
+			*display: inline;
+			zoom: 1;
+
 			width: 10px;
 			height: 10px;
+			line-height: 10px;
 			margin: 0 4px;
 
 			text-indent: -999em;
+			*text-indent: 0;
 
 			border: 2px solid #fff;
 			border-radius: 6px;
