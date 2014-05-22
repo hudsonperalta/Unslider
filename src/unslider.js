@@ -18,10 +18,10 @@
 			pause: !f,      // pause on hover (boolean)
 			loop: !f,       // infinitely looping (boolean)
 			keys: f,        // keyboard shortcuts (boolean)
-			dots: f,        // display ••••o• pagination (boolean)
+			dots: f,        // display dots pagination (boolean)
 			arrows: f,      // display prev/next arrows (boolean)
-			prev: '←',      // text or html inside prev button (string)
-			next: '→',      // same as for prev option
+			prev: '&larr;', // text or html inside prev button (string)
+			next: '&rarr;', // same as for prev option
 			fluid: f,       // is it a percentage width? (boolean)
 			starting: f,    // invoke before animation (function with argument)
 			complete: f,    // invoke after animation (function with argument)
@@ -63,7 +63,11 @@
 
 			//  Set the relative widths
 			ul.css({position: 'relative', left: 0, width: (len * 100) + '%'});
-			li.css({'float': 'left', width: (_.max[0]) + 'px'});
+			if(o.fluid) {
+				li.css({'float': 'left', width: (100 / len) + '%'});
+			} else {
+				li.css({'float': 'left', width: (_.max[0]) + 'px'});
+			}
 
 			//  Autoslide
 			o.autoplay && setTimeout(function() {
