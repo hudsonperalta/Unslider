@@ -130,7 +130,9 @@
 					}
 				}).on('move', function(e) {
 					var left = 100 * e.distX / el.width();
-					_.ul.css("left", el.data("left") + left + "%");
+				        var leftDelta = 100 * e.deltaX / el.width();
+					_.ul[0].style.left = parseInt(_.ul[0].style.left.replace("%", ""))+leftDelta+"%";
+
 					_.ul.data("left", left);
 				}).on('moveend', function(e) {
 					var left = _.ul.data("left");
