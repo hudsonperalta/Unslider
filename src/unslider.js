@@ -77,7 +77,7 @@
 					if (o.pause) {
 						el.on('mouseover mouseout', function(e) {
 							_.stop();
-							e.type == 'mouseout' && _.play();
+							e.type === 'mouseout' && _.play();
 						});
 					};
 				};
@@ -86,14 +86,17 @@
 			//  Keypresses
 			if (o.keys) {
 				$(document).keydown(function(e) {
-					var key = e.which;
-
-					if (key == 37)
-						_.prev(); // Left
-					else if (key == 39)
-						_.next(); // Right
-					else if (key == 27)
-						_.stop(); // Esc
+					switch(e.which) {
+						case 37:
+							_.prev(); // Left
+							break;
+						case 39:
+							_.next(); // Right
+							break;
+						case 27:
+							_.stop(); // Esc
+							break;
+					};
 				});
 			};
 
@@ -104,21 +107,19 @@
 			o.arrows && nav('arrow');
 
 			//  Patch for fluid-width sliders. Screw those guys.
-			if (o.fluid) {
-				$(window).resize(function() {
-					_.r && clearTimeout(_.r);
+			o.fluid && $(window).resize(function() {
+				_.r && clearTimeout(_.r);
 
-					_.r = setTimeout(function() {
-						var styl = {height: li.eq(_.i).outerHeight()},
-							width = el.outerWidth();
+				_.r = setTimeout(function() {
+					var styl = {height: li.eq(_.i).outerHeight()},
+						width = el.outerWidth();
 
-						ul.css(styl);
-						styl['width'] = Math.min(Math.round((width / el.parent().width()) * 100), 100) + '%';
-						el.css(styl);
-						li.css({ width: width + 'px' });
-					}, 50);
-				}).resize();
-			};
+					ul.css(styl);
+					styl['width'] = Math.min(Math.round((width / el.parent().width()) * 100), 100) + '%';
+					el.css(styl);
+					li.css({ width: width + 'px' });
+				}, 50);
+			}).resize();
 
 			//  Move support
 			if ($.event.special['move'] || $.Event('move')) {
@@ -165,7 +166,7 @@
 			$.isFunction(o.starting) && !callback && o.starting(el, li.eq(current));
 
 			//  To slide or not to slide
-			if ((!target.length || index < 0) && o.loop == f) return;
+			if ((!target.length || index < 0) && o.loop === f) return;
 
 			//  Check if it's out of bounds
 			if (!target.length) index = 0;
@@ -215,7 +216,7 @@
 			if (name == 'dot') {
 				html = '<ol class="dots">';
 					$.each(_.li, function(index) {
-						html += '<li class="' + (index == _.i ? name + ' active' : name) + '">' + ++index + '</li>';
+						html += '<li class="' + (index === _.i ? name + ' active' : name) + '">' + ++index + '</li>';
 					});
 				html += '</ol>';
 			} else {
