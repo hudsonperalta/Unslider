@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Unslider &mdash; the super-tiny jQuery slider</title>
+
+		<link rel="stylesheet" href="style.css">
+
+		<meta name="viewport" content="width=device-width">
+
+		<script src="//use.typekit.net/vgf3zbf.js"></script>
+		<script>try{Typekit.load();}catch(e){}</script>
+	</head>
+	<body>
+		<img id="logo" src="img/logo.png" alt="Unslider logo" width="34" height="27">
+
+		<div class="banner">
+			<ul>
+				<li style="background-image: url('img/sunset.jpg');">
+					<div class="inner">
+						<h1>The jQuery slider that just slides.</h1>
+						<p>No fancy effects or unnecessary markup, and it’s less than 3kb.</p>
+
+						<a class="btn" href="#download">Download</a>
+					</div>
+				</li>
+
+				<li style="background-image: url('img/wood.jpg');">
+					<div class="inner">
+						<h1>Fluid, flexible, fantastically minimal.</h1>
+						<p>Use any HTML in your slides, extend with CSS. You have full control.</p>
+
+						<a class="btn" href="#download">Download</a>
+					</div>
+				</li>
+
+				<li style="background-image: url('img/subway.jpg');">
+					<div class="inner">
+						<h1>Open-source.</h1>
+						<p>Everything to do with Unslider is hosted on GitHub.</p>
+
+						<a class="btn" href="//github.com/idiot/unslider">Contribute</a>
+					</div>
+				</li>
+
+				<li style="background-image: url('img/shop.jpg');">
+					<div class="inner">
+						<h1>Uh, that’s about it.</h1>
+						<p>I just wanted to show you another slide.</p>
+
+						<a class="btn" href="#download">Download</a>
+					</div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="features">
+			<ul class="wrap">
+				<li class="browser">
+					<b>Cross-browser happy</b>
+					<p>Unslider’s been tested in all the latest browsers, and it falls back magnificently for the not-so-latest ones.</p>
+				</li>
+
+				<li class="keyboard">
+					<b>Keyboard support</b>
+					<p>If you want to, you can add keyboard arrow support. Try it: hit left and right arrow keys.</p>
+				</li>
+
+				<li class="height">
+					<b>Adjusts for height</b>
+					<p>Not all slides are created equal, and Unslider knows it. It’ll stylishly transition heights with no extra code.</p>
+				</li>
+
+				<li class="responsive">
+					<b>Yep, it’s responsive</b>
+					<p>You’ll be hard pressed to find a site that’s not responsive these days. Unslider’s got your back.</p>
+				</li>
+			</ul>
+		</div>
+
+		<div id="howto" class="how wrap">
+			<h2>How to use Unslider</h2>
+
+			<ol>
+				<li>
+					<div>
+						<h3>Include jQuery and Unslider</h3>
+						<p>To use Unslider, you’ll need to make sure both the Unslider and jQuery scripts are included. If you’ve already got jQuery (you can test by opening your JavaScript console and typing <code>!!window.jQuery</code> — if it says <code>true</code>, you have jQuery), you don’t need to add the first line.</p>
+					</div>
+
+					<pre>&lt;script src="//code.jquery.com/jquery-latest.min.js"&gt;&lt;/script&gt;
+&lt;script src="//unslider.com/unslider.js"&gt;&lt;/script&gt;
+</pre>
+				</li>
+
+				<li>
+					<div>
+						<h3>Ready your HTML</h3>
+						<p>Unslider doesn’t need any really awkward markup. In fact, all you need is a <code>div</code> and an unordered list. An example of some Unslider-friendly HTML is on the right.</p>
+						<p>You can add as many slides as you want: the example on the right just has three for the sake of brevity, but Unslider won’t work properly with one slide (but then it’s just a box).</p>
+					</div>
+
+					<pre>&lt;div class=&quot;banner&quot;&gt;
+    &lt;ul&gt;
+        &lt;li&gt;This is a slide.&lt;/li&gt;
+        &lt;li&gt;This is another slide.&lt;/li&gt;
+        &lt;li&gt;This is a final slide.&lt;/li&gt;
+    &lt;/ul&gt;
+&lt;/div&gt;</pre>
+				</li>
+
+				<li>
+					<div>
+						<h3>Make it pretty</h3>
+						<p>You can change, add, and remove as much CSS per slide as you want, but there <i>is</i> a barebones style required by Unslider. It’s on the right (change the class name where .banner is the name of your slider).</p>
+					</div>
+
+					<pre>.banner { position: relative; overflow: auto; }
+    .banner li { list-style: none; }
+        .banner ul li { float: left; }</pre>
+				</li>
+
+				<li>
+					<div>
+						<h3>Plug it all together</h3>
+						<p>We’ve been through so much together, and I’m pleased to say the finish line is near. Our journey is almost over, just one more thing left to do. The JavaScript is on the right (make sure to put it in a <code>script</code> tag, and change <code>.banner</code> to whatever your slider’s element is).</p>
+					</div>
+
+					<pre>$(function() {
+    $('.banner').unslider();
+});</pre>
+				</li>
+			</ol>
+		</div>
+
+		<div id="options" class="options">
+			<div class="wrap">
+				<h2>Options</h2>
+				<p>Although it’s lightweight, Unslider comes with a range of options to customise your slider. Here’s the default options provided. You can add, remove, or completely skip out the options object. It’s up to you.</p>
+
+				<pre>$('.banner').unslider({
+	speed: 500,               <span>//  The speed to animate each slide (in milliseconds)</span>
+	delay: 3000,              <span>//  The delay between slide animations (in milliseconds), false for no autoplay</span>
+	complete: function() {},  <span>//  A function that gets called after every slide animation</span>
+	keys: true,               <span>//  Enable keyboard (left, right) arrow shortcuts</span>
+	dots: true,               <span>//  Display dot navigation</span>
+	fluid: false              <span>//  Support responsive design. May break non-responsive designs</span>
+});</pre>
+<br><br><br>
+				<h2 id="touch">Touch support</h2>
+				<p>If you want to add mobile/touch/swipe/whatever support to Unslider, you’ll need to include the <a href="http://stephband.info/jquery.event.swipe/">jQuery.event.swipe</a> plugin, then it’ll work out the box. Easy!</p>
+
+<br><br><br>
+
+				<h2 id="prev-next">Adding previous/next links</h2>
+				<p>A feature that’s often requested in Unslider, but isn’t included in-the-box, is previous/next links. Luckily, they’re easy enough to add with a little script, which utilises Unslider’s <a href="#methods">methods</a>.</p>
+
+				<pre><span>&lt;!-- The HTML --&gt;</span>
+&lt;a href="#" class="unslider-arrow prev"&gt;Previous slide&lt;/a&gt;
+&lt;a href="#" class="unslider-arrow next"&gt;Next slide&lt;/a&gt;
+
+<span>&lt;!-- And the JavaScript --&gt;</span>
+&lt;script&gt;
+    var unslider = $('.banner').unslider();
+
+    $('.unslider-arrow').click(function() {
+        var fn = this.className.split(' ')[1];
+
+        <span>//  Either do unslider.data('unslider').next() or .prev() depending on the className</span>
+        unslider.data('unslider')[fn]();
+    });
+&lt;/script&gt;
+</pre>
+
+<br><br><br>
+				<h2 id="methods">Accessing Unslider properties</h2>
+				<p>Using jQuery’s wonderful <code>data</code> method, you can access and manually override any methods. Here’s a list of what you can do:</p>
+
+				<pre>var slidey = $('.banner').unslider(),
+    data = slidey.data('unslider');
+
+<span>//  Start Unslider</span>
+data.play();
+
+<span>//  Pause Unslider</span>
+data.stop();
+
+<span>//  Move to a slide index, with optional callback</span>
+data.to(2, function() {});
+<span>//  data.to(0);</span>
+
+<span>//  Manually enable keyboard shortcuts</span>
+data.keys();
+
+<span>//  Move to the next slide (or the first slide if there isn't one)</span>
+data.next();
+
+<span>//  Move to the previous slide (or the last slide if there isn't one)</span>
+data.prev();
+
+<span>//  Append the navigation dots manually</span>
+data.dots();</pre>
+			</div>
+		</div>
+
+		<div id="download" class="wrap footer">
+			<a class="btn" href="/unslider.min.js">Download <span>minified (2.6k)</span></a>
+			<a class="btn" href="/unslider.js">Download <span>source (5.1k)</span></a>
+			<br>
+			<a href="//twitter.com/idiot">@idiot</a> &mdash; <a href="//github.com/idiot/unslider">Github</a>
+		</div>
+
+
+		<script src="//code.jquery.com/jquery-latest.min.js"></script>
+
+		<script src="//stephband.info/jquery.event.move/js/jquery.event.move.js"></script>
+		<script src="//stephband.info/jquery.event.swipe/js/jquery.event.swipe.js"></script>
+
+		<script src="//unslider.com/unslider.min.js"></script>
+		<script>
+			if(window.chrome) {
+				$('.banner li').css('background-size', '100% 100%');
+			}
+
+			$('.banner').unslider({
+				arrows: true,
+				fluid: true,
+				dots: true
+			});
+
+			//  Find any element starting with a # in the URL
+			//  And listen to any click events it fires
+			$('a[href^="#"]').click(function() {
+				//  Find the target element
+				var target = $($(this).attr('href'));
+
+				//  And get its position
+				var pos = target.offset(); // fallback to scrolling to top || {left: 0, top: 0};
+
+				//  jQuery will return false if there's no element
+				//  and your code will throw errors if it tries to do .offset().left;
+				if(pos) {
+					//  Scroll the page
+					$('html, body').animate({
+						scrollTop: pos.top,
+						scrollLeft: pos.left
+					}, 1000);
+				}
+
+				//  Don't let them visit the url, we'll scroll you there
+				return false;
+			});
+
+			var GoSquared = {acct: 'GSN-396664-U'};
+		</script>
+		<script src="//d1l6p2sc9645hc.cloudfront.net/tracker.js"></script>
+	</body>
+</html>
